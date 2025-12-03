@@ -1,0 +1,108 @@
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+
+const questions = [
+  { id: 1, answer: "14" },
+  { id: 2, answer: "12" },
+  { id: 3, answer: "16" },
+  { id: 4, answer: "5" },
+  { id: 5, answer: "3" },
+  { id: 6, answer: "13" },
+  { id: 7, answer: "9" },
+  { id: 8, answer: "3" },
+  { id: 9, answer: "9" },
+  { id: 10, answer: "3" },
+];
+
+export default function Result() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const { answers, time, username } = state || {};
+
+  if (!answers) {
+    navigate("/"); // Agar to'g'ri state kelmasa home ga qaytadi
+    return null;
+  }
+
+  const correct = answers.filter((a, i) => a === questions[i].answer).length;
+  const wrong = answers.filter((a, i) => a && a !== questions[i].answer).length;
+  const unanswered = answers.filter((a) => !a).length;
+  const percent = Math.round((correct / questions.length) * 100);
+  const passed = percent >= 50;
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8"
+      >
+        <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Oson Matematika</h2>
+        <p className="text-center text-gray-500 mb-6">{new Date().toLocaleString()}</p>
+
+        {/* Progress Circle */}
+        <div className="flex justify-center mb-6">
+          <div className="relative w-36 h-36">
+            <svg className="w-full h-full">
+              <circle cx="72" cy="72" r="60" className="stroke-gray-200 fill-transparent stroke-8" />
+              <motion.circle
+                cx="72"
+                cy="72"
+                r="60"
+                className={`${passed ? "stroke-green-500" : "stroke-red-500"} fill-transparent stroke-8`}
+                strokeDasharray={2 * Math.PI * 60}
+                strokeDashoffset={2 * Math.PI * 60 * (1 - percent / 100)}
+                initial={{ strokeDashoffset: 2 * Math.PI * 60 }}
+                animate={{ strokeDashoffset: 2 * Math.PI * 60 * (1 - percent / 100) }}
+                transition={{ duration: 1 }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold">{percent}%</span>
+              <span className="text-gray-500 text-sm">{passed ? "A" : "F"}</span>
+            </div>
+          </div>
+        </div>
+
+        <p className={`text-center text-xl font-semibold mb-4 ${passed ? "text-green-500" : "text-red-500"}`}>
+          {passed ? "Muvaffaqiyatli" : "Muvaffaqiyatsiz"}
+        </p>
+
+        {/* Answer Stats */}
+        <div className="grid grid-cols-2 gap-4 mb-6 text-gray-700">
+          <div className="bg-green-100 p-4 rounded-lg shadow">
+            <p className="text-lg font-semibold">To‘g‘ri javoblar</p>
+            <p className="text-2xl font-bold text-green-600">{correct}</p>
+          </div>
+          <div className="bg-red-100 p-4 rounded-lg shadow">
+            <p className="text-lg font-semibold">Noto‘g‘ri javoblar</p>
+            <p className="text-2xl font-bold text-red-600">{wrong}</p>
+          </div>
+          <div className="bg-gray-100 p-4 rounded-lg shadow">
+            <p className="text-lg font-semibold">Javobsiz savollar</p>
+            <p className="text-2xl font-bold text-gray-600">{unanswered}</p>
+          </div>
+          <div className="bg-blue-100 p-4 rounded-lg shadow">
+            <p className="text-lg font-semibold">Jami savollar</p>
+            <p className="text-2xl font-bold text-blue-600">{questions.length}</p>
+          </div>
+        </div>
+
+        <p className="text-center text-gray-700 mb-6 font-medium">
+          Ismingiz: <span className="font-bold">{username}</span>
+        </p>
+
+        <div className="flex justify-center">
+          <button
+            onClick={() => navigate("/")}
+            className="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition"
+          >
+            Qayta boshlash
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
