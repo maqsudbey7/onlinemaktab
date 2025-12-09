@@ -14,7 +14,12 @@ export default function FAQSection() {
   const toggleFAQ = (index) => setOpenIndex(openIndex === index ? null : index);
 
   return (
-    <section className="py-32 px-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <section
+      className="py-32 px-6 transition-colors duration-300"
+      style={{
+        background: "linear-gradient(135deg, #fdf6e3, #c6f1ff)", // Umumiy orqa fon ranglari
+      }}
+    >
       <div className="max-w-4xl mx-auto">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-10">
           Tez-tez so‘raladigan savollar

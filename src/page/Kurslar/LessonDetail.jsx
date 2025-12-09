@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { courses } from "../../data/courses";
 import { FaArrowLeft, FaArrowRight, FaBookOpen, FaPlay } from "react-icons/fa";
 
+import { useEffect } from "react";
+
 export default function LessonDetail() {
   const { courseId, lessonId } = useParams();
   const navigate = useNavigate();
@@ -29,6 +31,21 @@ export default function LessonDetail() {
       <p className="text-center mt-20 text-gray-500 text-xl">Dars topilmadi!</p>
     );
   }
+  // watched ni olish
+const watched = JSON.parse(localStorage.getItem("watchedLessons") || "{}");
+
+// ushbu darsni watched qilish
+const markWatched = () => {
+  if (!watched[course.id]) watched[course.id] = {};
+  watched[course.id][`${modIndex}-${lessonIndex}`] = true;
+  localStorage.setItem("watchedLessons", JSON.stringify(watched));
+};
+
+// sahifa ochilganda immediately watched qiladi (xohlasang video tugaganda qilasan)
+useEffect(() => {
+  markWatched();
+}, []);
+
 
   const lesson = module.lessons[lessonIndex];
 
@@ -60,9 +77,10 @@ export default function LessonDetail() {
   };
 
   const progress = ((lessonIndex + 1) / totalLessons) * 100;
+  
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 py-28 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-200 py-8 px-4">
       <div className="max-w-5xl mx-auto bg-white p-10 rounded-2xl shadow-xl space-y-10 border border-gray-100">
 
         {/* Go Back */}

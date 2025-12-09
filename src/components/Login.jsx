@@ -1,64 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [message, setMessage] = useState("");
+  const inputsRef = useRef([]);
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e, index) => {
+    const value = e.target.value;
+    if (/^[0-9]?$/.test(value)) {
+      const newCode = [...code];
+      newCode[index] = value;
+      setCode(newCode);
+
+      if (value && index < 5) {
+        inputsRef.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !code[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login data:", form);
-    // TODO: API call
-    navigate("/"); // login muvaffaqiyatli bo'lsa Home ga yo'naltirish
+    const fullCode = code.join("");
+
+    // Admin kodini o'zing belgilaysan
+    if (fullCode === "111111") {
+      localStorage.setItem("role", "admin");
+      navigate("/admin");
+      return;
+    }
+
+    // oddiy user bo'lsa
+    if (fullCode === "222222") {
+      localStorage.setItem("role", "user");
+      navigate("/courses");
+      return;
+    }
+
+    setMessage("❌ Kod xato yoki eskirgan");
   };
 
   return (
-    <div className=" mt-12 flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">Kirish</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 dark:text-gray-200 mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
+    <div className="flex items-center justify-center mt-12">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-[500px]">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex justify-between gap-3">
+            {code.map((num, idx) => (
+              <input
+                key={idx}
+                type="text"
+                maxLength="1"
+                value={num}
+                onChange={(e) => handleChange(e, idx)}
+                onKeyDown={(e) => handleKeyDown(e, idx)}
+                ref={(el) => (inputsRef.current[idx] = el)}
+                className="w-12 h-12 text-center text-xl border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
+              />
+            ))}
           </div>
-          <div>
-            <label className="block text-gray-700 dark:text-gray-200 mb-1">Parol</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
+
           <button
             type="submit"
-            className="w-full py-2 bg-black text-white rounded-lg hover:bg-primary/90 transition"
+            className="bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition"
           >
             Kirish
           </button>
         </form>
-        <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 text-center">
-          Akkauntingiz yo‘qmi?{" "}
-          <span
-            className="text-primary cursor-pointer hover:underline"
-            onClick={() => navigate("/register")}
-          >
-            Ro‘yxatdan o‘tish
-          </span>
-        </p>
+
+        {message && (
+          <p className="mt-6 text-center font-medium text-red-600">
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

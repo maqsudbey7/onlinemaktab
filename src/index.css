@@ -11,14 +11,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* glass effect */
 .glass {
   backdrop-filter: blur(8px);
   background: rgba(255,255,255,0.55);
   border: 1px solid rgba(255,255,255,0.6);
 }
 
-/* small utility */
 .card-gradient {
   background: linear-gradient(135deg, rgba(124,77,255,0.14), rgba(64,86,255,0.06));
 }
+
+
