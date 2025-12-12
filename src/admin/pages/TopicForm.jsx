@@ -9,16 +9,27 @@ export default function TopicForm() {
 
   const save = async e => {
     e.preventDefault();
-    await adminApi.post(`/modules/${moduleId}/topics`, { title });
-    navigate(-1);
+    try {
+      await adminApi.post(`/modules/${moduleId}/topics`, { title });
+      navigate(-1);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <form onSubmit={save} className="max-w-lg">
-      <h2 className="text-xl mb-4">New Topic</h2>
-      <input className="w-full border p-2 rounded" value={title}
-        onChange={e => setTitle(e.target.value)} />
-      <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+    <form onSubmit={save} className="max-w-lg p-4 bg-white rounded shadow">
+      <h2 className="text-xl mb-4 font-bold">New Topic</h2>
+
+      <label className="block mb-2 font-medium">Title</label>
+      <input
+        className="w-full border p-2 rounded mb-4"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        required
+      />
+
+      <button className="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
     </form>
   );
 }

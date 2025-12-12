@@ -1,26 +1,22 @@
-// src/admin/pages/Courses.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import adminApi from "../../api/adminApi";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchCourses = async () => {
-    try {
-      const res = await adminApi.get("/courses");
-      setCourses(res.data);
-    } catch (err) {
-      console.error(err);
-      // server bo'lmasa mock qilish mumkin
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchCourses();
+    // Backend yo‘q → mock data ishlatamiz
+    const mockCourses = [
+      { _id: "1", title: "React Basics", modules: [1, 2] },
+      { _id: "2", title: "Node.js Advanced", modules: [1] },
+      { _id: "3", title: "Express + MongoDB", modules: [] },
+    ];
+
+    setTimeout(() => { // simulyatsiya loading
+      setCourses(mockCourses);
+      setLoading(false);
+    }, 500);
   }, []);
 
   return (

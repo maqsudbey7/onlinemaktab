@@ -26,26 +26,40 @@ export default function Login() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fullCode = code.join("");
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  const fullCode = code.join("");
 
-    // Admin kodini o'zing belgilaysan
-    if (fullCode === "111111") {
-      localStorage.setItem("role", "admin");
-      navigate("/admin");
-      return;
-    }
+  if (fullCode === "111111") {
+    localStorage.setItem("role", "admin");
+    // admin ma'lumotini ham saqlash
+    localStorage.setItem("user", JSON.stringify({
+      name: "Admin",
+      email: "admin@example.com",
+      role: "admin",
+      onlineDays: 0,
+      watchedCourses: []
+    }));
+    navigate("/admin");
+    return;
+  }
 
-    // Oddiy user bo'lsa
-    if (fullCode === "222222") {
-      localStorage.setItem("role", "user");
-      navigate("/courses");
-      return;
-    }
+  if (fullCode === "222222") {
+    localStorage.setItem("role", "user");
+    localStorage.setItem("user", JSON.stringify({
+      name: "Maqsudbek",
+      email: "maq@example.com",
+      role: "user",
+      onlineDays: 0,
+      watchedCourses: []
+    }));
+    navigate("/profile"); // yoki /courses
+    return;
+  }
 
-    setMessage("❌ Kod xato yoki eskirgan");
-  };
+  setMessage("❌ Kod xato yoki eskirgan");
+};
+;
 
   return (
     <div className="flex items-center justify-center mt-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
