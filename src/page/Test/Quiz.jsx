@@ -28,7 +28,6 @@ export default function Quiz() {
       setTime((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // test tugadi, Result page ga yo'naltirish
           navigate("/result", { state: { answers, time: 0, username: "Maqsudbek" } });
           return 0;
         }
@@ -48,7 +47,6 @@ export default function Quiz() {
     if (current < questions.length - 1) {
       setCurrent(current + 1);
     } else {
-      // Result page ga yo'naltirish
       navigate("/result", { state: { answers: updated, time, username: "Maqsudbek" } });
     }
   };
@@ -60,11 +58,11 @@ export default function Quiz() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-32 p-6">
+    <div className="max-w-2xl mx-auto my-6 p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <h1 className="text-2xl font-semibold mb-4 text-center">Matematika</h1>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-200 rounded-full h-4 mb-6 overflow-hidden">
+      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mb-6 overflow-hidden">
         <motion.div
           className="h-4 rounded-full bg-gradient-to-r from-blue-400 to-blue-600"
           animate={{ width: `${((current + 1) / questions.length) * 100}%` }}
@@ -80,9 +78,9 @@ export default function Quiz() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.3 }}
-          className="bg-white p-6 rounded shadow mb-4"
+          className="p-6 rounded shadow mb-4 bg-white dark:bg-gray-800 transition-colors duration-300"
         >
-          <div className="mb-2 text-gray-700 font-medium">
+          <div className="mb-2 font-medium text-gray-700 dark:text-gray-200">
             Savol {current + 1}: {questions[current].question}
           </div>
           <div className="flex flex-col gap-2">
@@ -90,7 +88,9 @@ export default function Quiz() {
               <label
                 key={opt}
                 className={`border p-2 rounded cursor-pointer transition-colors
-                  ${selected === opt ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
+                  ${selected === opt 
+                    ? "border-blue-500 bg-blue-100 dark:bg-blue-600 dark:text-white" 
+                    : "border-gray-300 dark:border-gray-600 dark:text-gray-200"}`}
               >
                 <input
                   type="radio"
@@ -108,8 +108,10 @@ export default function Quiz() {
             onClick={handleNext}
             disabled={!selected}
             className={`mt-4 px-4 py-2 rounded text-white ${
-              selected ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300 cursor-not-allowed"
-            }`}
+              selected
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-gray-300 cursor-not-allowed dark:bg-gray-600"
+            } transition-colors duration-300`}
           >
             {current === questions.length - 1 ? "Tugatish" : "Keyingi →"}
           </button>
@@ -117,7 +119,7 @@ export default function Quiz() {
       </AnimatePresence>
 
       {/* Test info */}
-      <div className="flex justify-between text-gray-600 mb-4">
+      <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-4">
         <div>Joriy savol: {current + 1}</div>
         <div>Jami savollar: {questions.length}</div>
         <div>Qolgan vaqt: {formatTime(time)}</div>
@@ -129,8 +131,10 @@ export default function Quiz() {
           <button
             key={idx}
             onClick={() => setCurrent(idx)}
-            className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors
-              ${current === idx ? "bg-blue-500 text-white" : "bg-white text-gray-700"}`}
+            className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors duration-300
+              ${current === idx 
+                ? "bg-blue-500 text-white border-blue-500" 
+                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600"}`}
           >
             {idx + 1}
           </button>

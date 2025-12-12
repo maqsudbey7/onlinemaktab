@@ -14,13 +14,9 @@ export default function FAQSection() {
   const toggleFAQ = (index) => setOpenIndex(openIndex === index ? null : index);
 
   return (
-    <section
-      className="py-32 px-6 transition-colors duration-300"
-      style={{
-        background: "linear-gradient(135deg, #fdf6e3, #c6f1ff)", // Umumiy orqa fon ranglari
-      }}
-    >
+    <section className="py-32 px-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
+
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-10">
           Tez-tez so‘raladigan savollar
         </h2>
@@ -35,25 +31,34 @@ export default function FAQSection() {
               transition={{ duration: 0.4, delay: index * 0.1 }}
               className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
             >
+              {/* Question */}
               <div
-                className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => toggleFAQ(index)}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{faq.icon}</span>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">{faq.question}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
+                    {faq.question}
+                  </h3>
+
                   {faq.new && (
-                    <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>
+                    <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      NEW
+                    </span>
                   )}
                 </div>
 
                 <div
-                  className={`text-gray-500 dark:text-gray-400 transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""}`}
+                  className={`text-gray-500 dark:text-gray-400 transition-transform duration-300 ${
+                    openIndex === index ? "rotate-180" : ""
+                  }`}
                 >
                   <FaChevronDown />
                 </div>
               </div>
 
+              {/* Answer */}
               <AnimatePresence initial={false}>
                 {openIndex === index && (
                   <motion.div
@@ -67,9 +72,11 @@ export default function FAQSection() {
                   </motion.div>
                 )}
               </AnimatePresence>
+
             </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );

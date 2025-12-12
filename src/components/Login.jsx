@@ -37,7 +37,7 @@ export default function Login() {
       return;
     }
 
-    // oddiy user bo'lsa
+    // Oddiy user bo'lsa
     if (fullCode === "222222") {
       localStorage.setItem("role", "user");
       navigate("/courses");
@@ -48,9 +48,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center mt-12">
-      <div className="bg-white p-10 rounded-2xl shadow-xl w-[500px]">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+    <div className="flex items-center justify-center mt-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl w-[500px] transition-colors duration-300">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+          Login
+        </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="flex justify-between gap-3">
@@ -63,21 +65,21 @@ export default function Login() {
                 onChange={(e) => handleChange(e, idx)}
                 onKeyDown={(e) => handleKeyDown(e, idx)}
                 ref={(el) => (inputsRef.current[idx] = el)}
-                className="w-12 h-12 text-center text-xl border-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition"
+                className="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
               />
             ))}
           </div>
 
           <button
             type="submit"
-            className="bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition"
+            className="bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition-colors"
           >
             Kirish
           </button>
         </form>
 
         {message && (
-          <p className="mt-6 text-center font-medium text-red-600">
+          <p className="mt-6 text-center font-medium text-red-600 dark:text-red-400">
             {message}
           </p>
         )}

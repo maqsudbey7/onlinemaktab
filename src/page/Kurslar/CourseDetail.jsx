@@ -14,7 +14,7 @@ export default function CourseDetail() {
 
   if (!course)
     return (
-      <p className="text-center mt-20 text-gray-500 text-xl">
+      <p className="text-center mt-20 text-gray-500 dark:text-gray-400 text-xl">
         Kurs topilmadi!
       </p>
     );
@@ -23,15 +23,15 @@ export default function CourseDetail() {
     setOpenModule(openModule === index ? null : index);
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8] px-4 md:px-6 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 md:px-6 py-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* =================== TOP INFO BLOCK =================== */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-6 md:p-8 rounded-xl shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
           <div className="md:col-span-2">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{course.title}</h1>
-            <p className="text-gray-700 leading-7 mb-6">{course.description}</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{course.title}</h1>
+            <p className="text-gray-700 dark:text-gray-300 leading-7 mb-6">{course.description}</p>
 
-            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-gray-700 text-[15px] md:text-[17px] mb-2">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-gray-700 dark:text-gray-300 text-[15px] md:text-[17px] mb-2">
               <div className="flex items-center gap-2">
                 <FaUsers /> {course.students} o'quvchilar
               </div>
@@ -49,7 +49,7 @@ export default function CourseDetail() {
                 placeholder="Dars nomi bo‘yicha qidirish..."
                 value={lessonSearch}
                 onChange={(e) => setLessonSearch(e.target.value)}
-                className="w-full md:w-64 p-2 rounded border border-gray-300 focus:ring-2 focus:ring-blue-300 focus:border-blue-600 outline-none"
+                className="w-full md:w-64 p-2 rounded border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500 focus:border-blue-600 dark:focus:border-blue-400 outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
               />
             </div>
           </div>
@@ -63,36 +63,31 @@ export default function CourseDetail() {
           </div>
         </div>
 
-        {/* =================== MODUL & DARS BLOCK =================== */}
-        <div className="mt-8 md:mt-12 bg-white p-6 md:p-8 rounded-xl shadow-md">
-          <h2 className="text-xl md:text-2xl font-semibold mb-6">Kurs dasturi</h2>
+        {/* =================== MODULES BLOCK =================== */}
+        <div className="mt-8 md:mt-12 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
+          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Kurs dasturi</h2>
 
           <div className="space-y-4">
             {course.modules.map((mod, i) => {
-              // Modul ichidagi darslarni filterlash
               const filteredLessons = mod.lessons.filter((lesson) =>
                 lesson.title.toLowerCase().includes(lessonSearch.toLowerCase())
               );
 
               return (
-                <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
-                  {/* Modul nomi */}
+                <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-colors duration-300">
                   <div
-                    className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+                    className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                     onClick={() => toggleModule(i)}
                   >
                     <div>
-                      <h3 className="text-lg md:text-xl font-semibold">{mod.title}</h3>
-                      <p className="text-gray-500 text-sm">
-                        {mod.lessons.length} darslik | {mod.duration}
-                      </p>
+                      <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">{mod.title}</h3>
+                      <p className="text-gray-500 dark:text-gray-300 text-sm">{mod.lessons.length} darslik | {mod.duration}</p>
                     </div>
                     <FaChevronDown
-                      className={`transition-transform duration-300 ${openModule === i ? "rotate-180" : ""}`}
+                      className={`transition-transform duration-300 text-gray-500 dark:text-gray-300 ${openModule === i ? "rotate-180" : ""}`}
                     />
                   </div>
 
-                  {/* Lessons */}
                   <AnimatePresence initial={false}>
                     {openModule === i && (
                       <motion.div
@@ -104,16 +99,13 @@ export default function CourseDetail() {
                       >
                         {filteredLessons.length > 0 ? (
                           filteredLessons.map((lesson, j) => {
-                            const isWatched =
-                              watched[course.id]?.[`${i}-${j}`];
+                            const isWatched = watched[course.id]?.[`${i}-${j}`];
 
                             return (
                               <div
                                 key={j}
-                                className="bg-white rounded-xl shadow-md hover:shadow-xl p-4 cursor-pointer transition transform hover:-translate-y-1"
-                                onClick={() =>
-                                  navigate(`/courses/${course.id}/lesson/${i}-${j}`)
-                                }
+                                className="bg-white dark:bg-gray-700 rounded-xl shadow-md mt-4 hover:shadow-xl p-4 cursor-pointer transition transform hover:-translate-y-1"
+                                onClick={() => navigate(`/courses/${course.id}/lesson/${i}-${j}`)}
                               >
                                 <div className="flex items-center gap-3 mb-2">
                                   {isWatched ? (
@@ -121,21 +113,16 @@ export default function CourseDetail() {
                                   ) : (
                                     <FaVideo className="text-blue-500 text-lg" />
                                   )}
-
-                                  <h4 className="font-semibold text-gray-900">{lesson.title}</h4>
+                                  <h4 className="font-semibold text-gray-900 dark:text-white">{lesson.title}</h4>
                                 </div>
 
-                                <p className="text-gray-500 text-sm">{lesson.time}</p>
-                                <span className="mt-2 inline-block text-xs text-gray-400">
-                                  Video dars
-                                </span>
+                                <p className="text-gray-500 dark:text-gray-300 text-sm">{lesson.time}</p>
+                                <span className="mt-2 inline-block text-xs text-gray-400 dark:text-gray-400">Video dars</span>
                               </div>
                             );
                           })
                         ) : (
-                          <p className="col-span-full text-gray-400 text-center">
-                            Hech qanday dars topilmadi
-                          </p>
+                          <p className="col-span-full text-gray-400 dark:text-gray-400 text-center">Hech qanday dars topilmadi</p>
                         )}
                       </motion.div>
                     )}

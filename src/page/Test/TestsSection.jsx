@@ -7,7 +7,7 @@ const tests = [
     id: "matematika", 
     title: "Matematika", 
     questions: 50, 
-    gradient: ["#3b82f6", "#2563eb"], // kartaning rangli gradienti
+    gradient: ["#3b82f6", "#2563eb"], 
     difficulty: "O‘rta", 
     new: true, 
     progress: 40, 
@@ -53,18 +53,15 @@ export default function TestsSection() {
   };
 
   return (
-    // Umumiy orqa fon shu yerda berildi
     <section
       className="py-32 px-6 transition-colors duration-300"
-      style={{
-        background: "linear-gradient(135deg, #e0f7fa, #ffe0b2)" // Umumiy orqa fon ranglari
-      }}
+      
     >
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-4xl md:text-5xl dark:text-white font-extrabold text-gray-900 mb-4">
           Interaktiv testlar
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 text-lg md:text-xl">
+        <p className="text-gray-600 text-lg md:text-xl dark:text-white/60">
           Har bir fan bo‘yicha bilimlaringizni sinab ko‘ring. Testlarni tugatgach, natijalarni darhol ko‘rishingiz mumkin.
         </p>
       </div>
@@ -80,13 +77,11 @@ export default function TestsSection() {
             className="relative rounded-xl overflow-hidden shadow-2xl cursor-pointer group"
             onClick={() => handleStartTest(test.id)}
           >
-            {/* Kartaning o‘z rangli gradienti */}
             <div
               className="absolute inset-0 rounded-xl transition-opacity duration-300 group-hover:opacity-90"
               style={{ background: `linear-gradient(135deg, ${test.gradient[0]}, ${test.gradient[1]})` }}
             ></div>
 
-            {/* Content */}
             <div className="relative p-6 flex flex-col items-start z-10">
               <div className="absolute top-4 right-4 text-4xl">{test.icon}</div>
 
@@ -96,7 +91,6 @@ export default function TestsSection() {
                 Qiyinchilik: <span className="font-semibold">{test.difficulty}</span>
               </p>
 
-              {/* Progress Bar */}
               <div className="w-full bg-white/20 h-2 rounded-full mb-4">
                 <div
                   className="bg-white h-2 rounded-full transition-all duration-500"
@@ -109,7 +103,6 @@ export default function TestsSection() {
               </button>
             </div>
 
-            {/* Decorative shapes */}
             <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-white/5 rounded-full blur-3xl"></div>
           </motion.div>

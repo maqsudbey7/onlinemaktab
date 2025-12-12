@@ -1,17 +1,17 @@
-// Layout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-export default function Layout({ isDark, toggleDarkMode }) {
+export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar isDark={isDark} toggleDarkMode={toggleDarkMode} />
-      <main className="flex-grow">
-        <Outlet /> {/* Bu yerga Route’lardagi componentlar keladi */}
+    <div className=" flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
+      <Navbar />
+      <main className="flex-grow bg-white dark:bg-gray-900 transition-colors duration-300">
+        <Outlet />
       </main>
       <Footer />
     </div>
   );
 }
+

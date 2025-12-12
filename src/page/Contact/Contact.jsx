@@ -30,13 +30,10 @@ export default function Contact() {
 
   return (
     <section
-      className="py-32 px-6 transition-colors duration-300"
-      style={{
-        background: "linear-gradient(135deg, #f0f4ff, #d3f8e2)", // Umumiy orqa fon
-      }}
+      className="py-32 px-6 transition-colors duration-300 bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-700"
     >
       <div className="max-w-6xl mx-auto space-y-10">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">
           Biz bilan bog'laning
         </h1>
 
@@ -94,7 +91,7 @@ export default function Contact() {
             value={formData.name}
             onChange={handleChange}
             placeholder="Ismingiz"
-            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition-colors duration-300"
             required
           />
           <input
@@ -103,7 +100,7 @@ export default function Contact() {
             value={formData.email}
             onChange={handleChange}
             placeholder="Email manzilingiz"
-            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition-colors duration-300"
             required
           />
           <input
@@ -112,7 +109,7 @@ export default function Contact() {
             value={formData.subject}
             onChange={handleChange}
             placeholder="Mavzu"
-            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition-colors duration-300"
             required
           />
           <textarea
@@ -121,7 +118,7 @@ export default function Contact() {
             onChange={handleChange}
             placeholder="Xabaringiz"
             rows={4}
-            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+            className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition-colors duration-300"
             required
           ></textarea>
           <div className="md:col-span-2 flex items-center gap-2 text-gray-700 dark:text-gray-300">
