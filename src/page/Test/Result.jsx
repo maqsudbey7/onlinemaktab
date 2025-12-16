@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 const questions = [
   { id: 1, answer: "14" },
@@ -32,12 +33,13 @@ export default function Result() {
   const passed = percent >= 50;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 p-4 transition-colors duration-300">
+    <div className=" flex items-center justify-center dark:from-gray-800 dark:to-gray-900 p-4 transition-colors duration-300">
+      <BackgroundLogos/>
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-300"
+        className="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-5 transition-colors duration-300"
       >
         <h2 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-gray-100">
           Oson Matematika
@@ -103,7 +105,7 @@ export default function Result() {
 
         <div className="flex justify-center">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/test")}
             className="bg-blue-500 dark:bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors duration-300"
           >
             Qayta boshlash

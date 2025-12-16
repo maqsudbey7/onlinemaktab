@@ -12,18 +12,17 @@ export const courses = [
     modules: [
       {
         title: "Asosiy tushunchalar",
-        lessonsCount: 3,
+        lessonsCount: 8,
         duration: "1 soat 20 daqiqa",
         lessons: [
-          { title: "Kirish", time: "10:00", video: "https://youtu.be/9dUhZq9dkHM?si=8XBVdcve2tByFOQI" },
-          { title: "O'zgaruvchilar", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663" },
-          { title: "O'zgaruvchilar", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663" },
-          { title: "Funktsiyalar", time: "20:00", video: "https://youtu.be/_j7yneg6if0?si=SISj-mYRc-u4jxjO" },
-          { title: "Kirish", time: "10:00", video: "https://youtu.be/9dUhZq9dkHM?si=8XBVdcve2tByFOQI" },
-          { title: "O'zgaruvchilar", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663" },
-          { title: "O'zgaruvchilar", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663" },
-          { title: "Funktsiyalar", time: "20:00", video: "https://youtu.be/_j7yneg6if0?si=SISj-mYRc-u4jxjO" }
-
+          { title: "Kirish", time: "10:00", video: "https://youtu.be/9dUhZq9dkHM?si=8XBVdcve2tByFOQI", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "O'zgaruvchilar 1", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "O'zgaruvchilar 2", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Funktsiyalar 1", time: "20:00", video: "https://youtu.be/_j7yneg6if0?si=SISj-mYRc-u4jxjO", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Kirish 2", time: "10:00", video: "https://youtu.be/9dUhZq9dkHM?si=8XBVdcve2tByFOQI", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "O'zgaruvchilar 3", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "O'zgaruvchilar 4", time: "15:00", video: "https://youtu.be/E9OKpacyUSc?si=RnpzHYv1CNVBN663", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Funktsiyalar 2", time: "20:00", video: "https://youtu.be/_j7yneg6if0?si=SISj-mYRc-u4jxjO", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" }
         ]
       },
       {
@@ -31,9 +30,9 @@ export const courses = [
         lessonsCount: 3,
         duration: "1 soat 40 daqiqa",
         lessons: [
-          { title: "Arraylar", time: "20:00", video: "https://youtu.be/1Bmqo8tsOq8?si=igdJndFwUzdPsgPP" },
-          { title: "Obyektlar", time: "25:00", video: "https://youtu.be/jMermL9QA48?si=kWbY7VTnVSvLSCsn" },
-          { title: "Map & Set", time: "15:00", video: "https://youtu.be/dgcyvjQiJnQ?si=c6Ox8-V5fM18nCNg" }
+          { title: "Arraylar", time: "20:00", video: "https://youtu.be/1Bmqo8tsOq8?si=igdJndFwUzdPsgPP", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Obyektlar", time: "25:00", video: "https://youtu.be/jMermL9QA48?si=kWbY7VTnVSvLSCsn", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Map & Set", time: "15:00", video: "https://youtu.be/dgcyvjQiJnQ?si=c6Ox8-V5fM18nCNg", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" }
         ]
       }
     ]
@@ -54,8 +53,8 @@ export const courses = [
         lessonsCount: 2,
         duration: "45 daqiqa",
         lessons: [
-          { title: "Kirish", time: "15:00", video: "https://youtu.be/kc6Nv56oeX4?si=G3VR0mbIuIfuTkN3" },
-          { title: "Turlar", time: "30:00", video: "https://youtu.be/jMermL9QA48?si=kWbY7VTnVSvLSCsn" }
+          { title: "Kirish", time: "15:00", video: "https://youtu.be/kc6Nv56oeX4?si=G3VR0mbIuIfuTkN3", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Turlar", time: "30:00", video: "https://youtu.be/jMermL9QA48?si=kWbY7VTnVSvLSCsn", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" }
         ]
       },
       {
@@ -63,8 +62,8 @@ export const courses = [
         lessonsCount: 2,
         duration: "1 soat",
         lessons: [
-          { title: "Generics", time: "30:00", video: "https://youtu.be/..." },
-          { title: "Decorators", time: "30:00", video: "https://youtu.be/..." }
+          { title: "Generics", time: "30:00", video: "https://youtu.be/...", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" },
+          { title: "Decorators", time: "30:00", video: "https://youtu.be/...", pdf: "https://en.pdfdrive.to/dl/javascript-tutorial" }
         ]
       }
     ]

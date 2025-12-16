@@ -1,4 +1,3 @@
-// src/admin/layout/AdminLayout.jsx
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { FiHome, FiBook, FiUsers, FiFileText } from "react-icons/fi";
@@ -6,34 +5,36 @@ import { FiHome, FiBook, FiUsers, FiFileText } from "react-icons/fi";
 export default function AdminLayout() {
   const navigate = useNavigate();
   const logout = () => {
-    // localStorage.removeItem('token') va boshqalar
-    navigate("/");
+    localStorage.removeItem("token");
+    navigate("/admin/login");
   };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      <aside className="w-64 bg-white border-r p-4">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold">Admin Panel</h2>
+      <aside className="w-64 bg-white border-r shadow-md p-6 flex flex-col justify-between">
+        <div>
+          <h2 className="text-2xl font-bold mb-8 text-blue-600">Admin Panel</h2>
+          <nav className="space-y-2 text-sm">
+            <Link to="/admin" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 transition-colors">
+              <FiHome /> Dashboard
+            </Link>
+            <Link to="/admin/courses" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 transition-colors">
+              <FiBook /> Courses
+            </Link>
+            <Link to="/admin/tests" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 transition-colors">
+              <FiFileText /> Tests
+            </Link>
+            <Link to="/admin/users" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 transition-colors">
+              <FiUsers /> Users
+            </Link>
+          </nav>
         </div>
-        <nav className="space-y-2 text-sm">
-          <Link to="/admin" className="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
-            <FiHome /> Dashboard
-          </Link>
-          <Link to="/admin/courses" className="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
-            <FiBook /> Courses
-          </Link>
-          <Link to="/admin/tests" className="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
-            <FiFileText /> Tests
-          </Link>
-          <Link to="/admin/users" className="flex items-center gap-3 p-2 rounded hover:bg-gray-100">
-            <FiUsers /> Users
-          </Link>
-          <button onClick={logout} className="mt-4 w-full text-left p-2 rounded hover:bg-gray-100">Logout</button>
-        </nav>
+        <button onClick={logout} className="mt-4 w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition-colors">
+          Logout
+        </button>
       </aside>
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 bg-gray-50 p-8 overflow-auto">
         <Outlet />
       </main>
     </div>

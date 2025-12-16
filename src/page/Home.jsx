@@ -12,6 +12,7 @@ import { FaCalculator, FaFlask, FaLeaf, FaAtom, FaBook } from "react-icons/fa";
 import { GiSpellBook } from "react-icons/gi";
 import TeacherCard from "../components/TeacherCard";
 import { Link } from "react-router-dom";
+import BackgroundLogos from "../components/BackgroundLogos/BackgroundLogos";
 
 export default function Home() {
   const items = [
@@ -44,7 +45,7 @@ export default function Home() {
 
   return (
     <div className="transition-colors duration-300 font-poppins bg-white dark:bg-gray-900">
-
+<BackgroundLogos/>
       {/* HERO SECTION */}
       <section className="pt-32 pb-20 relative py-20 px-6">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-center relative z-10">
@@ -61,7 +62,7 @@ export default function Home() {
             </h2>
 
             <p className="mt-6 text-gray-600 dark:text-gray-300 max-w-xl">
-              OnlaynMaktabim bilan maktab fanlarini chuqurlashgan holda o‘rganing — video darslar, interaktiv testlar va sertifikatlar.
+              A'loMaktab bilan maktab fanlarini chuqurlashgan holda o‘rganing — video darslar, interaktiv testlar va sertifikatlar.
             </p>
 
             <div className="mt-8 flex items-center gap-4">
@@ -143,32 +144,84 @@ export default function Home() {
           </Slider>
         </div>
       </section>
-<section className="max-w-7xl mx-auto px-6 mt-20">
-  <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-8 text-center">
+
+<section className="max-w-7xl mx-auto px-6 mt-24">
+  <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+    Platforma qanday ishlaydi?
+  </h2>
+
+  <div className="flex gap-8 justify-center">
     {[
-      { num: "10,000+", label: "O‘quvchilar" },
-      { num: "500+", label: "Video darslar" },
-      { num: "95%", label: "Muvaffaqiyat" },
-      { num: "5 yil", label: "Tajriba" }
+      {
+        title: "Ro‘yxatdan o‘ting",
+        desc: "Bir necha soniyada akkaunt yarating va barcha kurslarga kirish huquqiga ega bo‘ling.",
+        icon: "📝"
+      },
+      {
+        title: "Kurs tanlang",
+        desc: "O‘zingizga mos fan va darajani tanlab, video darslarni boshlang.",
+        icon: "📚"
+      },
+      {
+        title: "Natijaga erishing",
+        desc: "Testlardan o‘ting, sertifikat oling va bilimlaringizni mustahkamlang.",
+        icon: "🏆"
+      }
     ].map((item, i) => (
       <motion.div
         key={i}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: i * 0.1 }}
-        className="p-6 bg-white dark:bg-gray-800 text-black dark:text-white rounded-xl shadow-md"
+        transition={{ duration: 0.5 }}
+        className="
+          flex
+          items-start
+          gap-4
+          bg-white
+          dark:bg-gray-800
+          p-6
+          rounded-xl
+          shadow-md
+          max-w-sm
+        "
       >
-        <h2 className="text-3xl font-bold text-black-600 ">
-          {item.num}
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 mt-2">
-          {item.label}
-        </p>
+        {/* ICON */}
+        <div className="text-4xl">
+          {item.icon}
+        </div>
+
+        {/* TEXT */}
+        <div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {item.title}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
+            {item.desc}
+          </p>
+        </div>
       </motion.div>
     ))}
   </div>
 </section>
+
+
+
+<section className="mt-24 py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center">
+  <h2 className="text-3xl font-bold mb-6">
+    Bugun boshlang — kelajagingizga sarmoya qiling
+  </h2>
+  <p className="mb-8 max-w-xl mx-auto">
+    Minglab o‘quvchilar biz bilan bilimlarini oshirmoqda. Siz ham ularga qo‘shiling.
+  </p>
+  <Link
+    to="/login"
+    className="px-8 py-4 bg-white text-black font-semibold rounded-lg hover:scale-105 transition"
+  >
+    Ro‘yxatdan o‘tish
+  </Link>
+</section>
+
 
     </div>
   );

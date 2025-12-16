@@ -1,31 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { courses } from "../../data/courses";
 import { FaUsers, FaCalendar, FaBook, FaVideo, FaChevronDown, FaCheckCircle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCourses } from "../../context/CourseContext";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 export default function CourseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const course = courses.find((c) => c.id === parseInt(id));
+  const { courses } = useCourses();
+
+  const course = courses.find(c => c.id === parseInt(id));
+
   const [lessonSearch, setLessonSearch] = useState("");
-  const [openModule, setOpenModule] = useState(null); // Hozirgi ochiq modul
-  const watched = JSON.parse(localStorage.getItem("watchedLessons") || "{}");
+  const [openModule, setOpenModule] = useState(null);
+  const [watched, setWatched] = useState({});
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("watchedLessons") || "{}");
+    setWatched(saved);
+  }, []);
 
   if (!course)
-    return (
-      <p className="text-center mt-20 text-gray-500 dark:text-gray-400 text-xl">
-        Kurs topilmadi!
-      </p>
-    );
+    return <p className="text-center mt-20 text-gray-500 dark:text-gray-400 text-xl">Kurs topilmadi!</p>;
 
-  const toggleModule = (index) =>
-    setOpenModule(openModule === index ? null : index);
+  const toggleModule = index => setOpenModule(openModule === index ? null : index);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 md:px-6 py-12 transition-colors duration-300">
+      <BackgroundLogos />
       <div className="max-w-7xl mx-auto">
-        {/* =================== TOP INFO BLOCK =================== */}
+        {/* TOP INFO */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
           <div className="md:col-span-2">
             <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{course.title}</h1>
@@ -48,28 +53,24 @@ export default function CourseDetail() {
                 type="text"
                 placeholder="Dars nomi bo‘yicha qidirish..."
                 value={lessonSearch}
-                onChange={(e) => setLessonSearch(e.target.value)}
+                onChange={e => setLessonSearch(e.target.value)}
                 className="w-full md:w-64 p-2 rounded border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500 focus:border-blue-600 dark:focus:border-blue-400 outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
               />
             </div>
           </div>
 
           <div className="w-full h-48 md:h-56 rounded-xl overflow-hidden">
-            <img
-              src={course.image}
-              alt="Course preview"
-              className="w-full h-full object-cover"
-            />
+            <img src={course.image} alt="Course preview" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        {/* =================== MODULES BLOCK =================== */}
+        {/* MODULES */}
         <div className="mt-8 md:mt-12 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Kurs dasturi</h2>
 
           <div className="space-y-4">
             {course.modules.map((mod, i) => {
-              const filteredLessons = mod.lessons.filter((lesson) =>
+              const filteredLessons = mod.lessons.filter(lesson =>
                 lesson.title.toLowerCase().includes(lessonSearch.toLowerCase())
               );
 

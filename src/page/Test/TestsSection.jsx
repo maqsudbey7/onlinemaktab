@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 const tests = [
   { 
@@ -57,6 +58,7 @@ export default function TestsSection() {
       className="py-32 px-6 transition-colors duration-300"
       
     >
+      <BackgroundLogos/>
       <div className="max-w-7xl mx-auto text-center mb-12">
         <h2 className="text-4xl md:text-5xl dark:text-white font-extrabold text-gray-900 mb-4">
           Interaktiv testlar

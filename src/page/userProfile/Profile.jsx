@@ -3,6 +3,7 @@ import React from "react";
 import { getUser } from "../../utils/auth";
 import { courses } from "../../data/courses";
 import { FaBook } from "react-icons/fa";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 // Online activity grid component
 function OnlineDaysGrid({ onlineDates }) {
@@ -48,6 +49,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-6 min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <BackgroundLogos/>
       {/* Profil info */}
       <div className="mb-12 p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-xl transition transform hover:scale-101">
         <h1 className="text-4xl font-bold mb-3">Salom, {user.name}!</h1>

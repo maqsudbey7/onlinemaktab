@@ -8,7 +8,7 @@ export default function Footer() {
 
         {/* Logo va matn */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">OnlaynMaktabim</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">A'loMaktab</h2>
           <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">
             Yangi avlod uchun zamonaviy o‘quv platformasi.
             O‘rganing, rivojlaning va kelajagingizni quring.
@@ -30,7 +30,7 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Manzil</h3>
           <p className="text-gray-600 dark:text-gray-300">Toshkent shahri, Yunusobod</p>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">Email: support@onlaynmaktab.uz</p>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">Email: support@a'lomaktab.uz</p>
           <p className="mt-2 text-gray-600 dark:text-gray-300">Telefon: +998 90 123 45 67</p>
         </div>
 
@@ -48,7 +48,7 @@ export default function Footer() {
 
       {/* Pastki qator */}
       <div className="border-t border-gray-200 dark:border-gray-700 mt-10 pt-5 text-center text-gray-600 dark:text-gray-300">
-        © {new Date().getFullYear()} OnlaynMaktabim — Barcha huquqlar himoyalangan.
+        © {new Date().getFullYear()} A'loMaktab — Barcha huquqlar himoyalangan.
       </div>
     </footer>
   );

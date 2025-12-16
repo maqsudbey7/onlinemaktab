@@ -1,4 +1,3 @@
-// src/admin/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,35 +6,33 @@ export default function Login() {
   const [pass, setPass] = useState("");
   const nav = useNavigate();
 
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault();
-
-    // ❌ Axios o‘rniga soxta login
     if (email === "admin@example.com" && pass === "123456") {
       localStorage.setItem("token", "fake-admin-token");
-      nav("/admin"); // redirect to admin panel
+      nav("/admin");
     } else {
       alert("Email yoki password xato!");
     }
   };
 
   return (
-    <form onSubmit={submit} className="max-w-sm mx-auto mt-20 space-y-4">
-      <h2 className="text-xl text-center">Admin Login</h2>
+    <form onSubmit={submit} className="max-w-md mx-auto mt-24 p-6 bg-white rounded shadow space-y-4">
+      <h2 className="text-2xl font-bold text-center mb-4">Admin Login</h2>
       <input
-        className="border p-2 rounded w-full"
-        placeholder="email"
+        className="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400 outline-none"
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
-        className="border p-2 rounded w-full"
-        placeholder="password"
+        className="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400 outline-none"
+        placeholder="Password"
         type="password"
         value={pass}
         onChange={(e) => setPass(e.target.value)}
       />
-      <button className="bg-blue-600 text-white w-full py-2 rounded">
+      <button className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 transition-colors">
         Login
       </button>
     </form>

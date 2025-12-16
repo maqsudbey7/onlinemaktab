@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 const questions = [
   { id: 1, question: "1 + 13 = ?", options: ["14", "17", "15", "16"], answer: "14" },
@@ -59,6 +60,7 @@ export default function Quiz() {
 
   return (
     <div className="max-w-2xl mx-auto my-6 p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <BackgroundLogos/>
       <h1 className="text-2xl font-semibold mb-4 text-center">Matematika</h1>
 
       {/* Progress bar */}

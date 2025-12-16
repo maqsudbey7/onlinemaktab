@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaBook, FaSignal, FaUser, FaHeart, FaRegHeart } from "react-icons/fa";
 import img1 from "../../../public/js.webp";
 import img2 from "../../../public/img2.webp";
+import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
 const courses = [
   {
@@ -49,6 +50,7 @@ export default function Courses() {
 
   return (
     <div className="py-12 px-6 1 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300 ">
+      <BackgroundLogos/>
       <div className="max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}

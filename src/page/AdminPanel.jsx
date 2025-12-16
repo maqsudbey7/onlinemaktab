@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link, useNavigate, useParams } from "reac
 import { FiPlus, FiLogOut, FiDownload, FiUpload } from "react-icons/fi";
 import { FaUsers, FaBook, FaVideo } from "react-icons/fa";
 import { motion } from "framer-motion";
+import BackgroundLogos from "../components/BackgroundLogos/BackgroundLogos";
 
 // --------------------------- Storage keys ---------------------------
 const STORAGE_KEY = "admin_panel_courses_v1";
@@ -114,6 +115,7 @@ function AuthGate() {
 
   return (
     <div className="flex items-center justify-center h-screen">
+      <BackgroundLogos/>
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow">
         <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
         <input
