@@ -60,7 +60,7 @@ export default function CourseDetail() {
           </div>
 
           <div className="w-full h-48 md:h-56 rounded-xl overflow-hidden">
-            <img src={course.image} alt="Course preview" className="w-full h-full object-cover" />
+            <img src={course.image || null} alt="Course preview" className="w-full h-full object-cover" />
           </div>
         </div>
 

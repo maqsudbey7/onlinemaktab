@@ -1,27 +1,29 @@
+// src/admin/AdminRoutes.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "./layout/AdminLayout";
-import Courses from "./pages/Courses";
-import CourseForm from "./pages/CourseForm";
-import Modules from "./pages/Modules";
+
+// Pages
+import Dashboard from "./pages/Dashboard";
+import Courses from "./pages/AdminKurslar/Courses";
+import CourseForm from "./pages/AdminKurslar/CourseForm";
+import Modules from "./pages/AdminKurslar/Modules";
 import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Protected from "./pages/Protected";
-import TestForm from "./pages/AdminTest/TestForm";
-import TestsPage from "./pages/AdminTest/TestsPage";
-import TestDetailForm from "./pages/AdminTest/TestDetailForm";
-// import UserTests from "./pages/UserTests";
 
-
-// Admin test componentlari
+// Tests
+import AllTests from "./pages/AdminTest/AllTests"; // Barcha testlar ro'yxati
+import Tests from "./pages/AdminTest/Tests"; // Kursga oid testlar
+import TestQuestions from "./pages/AdminTest/TestQuestions"; // Savollar
 
 export default function AdminRoutes() {
   return (
     <Routes>
-      {/* PUBLIC ADMIN LOGIN PAGE */}
+      {/* LOGIN sahifasi */}
       <Route path="/login" element={<Login />} />
 
-      {/* PROTECTED ADMIN ROUTES */}
+      {/* ADMIN PANEL */}
       <Route
         path="/"
         element={
@@ -30,15 +32,25 @@ export default function AdminRoutes() {
           </Protected>
         }
       >
+        {/* Dashboard */}
+        <Route index element={<Dashboard />} />
+
+        {/* Kurslar */}
         <Route path="courses" element={<Courses />} />
         <Route path="courses/new" element={<CourseForm />} />
         <Route path="courses/:courseId/edit" element={<CourseForm edit />} />
         <Route path="courses/:courseId/modules" element={<Modules />} />
-        <Route path="users" element={<Users />} />
-        <Route path="tests" element={<TestsPage />} />                     {/* /admin/tests */}
-        <Route path="tests/:courseId/new" element={<TestForm />} />        {/* /admin/tests/1/new */}
-        <Route path="tests/:courseId/:testId" element={<TestDetailForm />} /> {/* test detail / savollar */}
 
+        {/* Users */}
+        <Route path="users" element={<Users />} />
+
+        {/* Tests */}
+        {/* Umumiy testlar sahifasi */}
+        <Route path="tests" element={<AllTests />} />
+        {/* Kursga oid testlar */}
+        <Route path="courses/:courseId/tests" element={<Tests />} />
+        {/* Test savollarini boshqarish */}
+        <Route path="courses/:courseId/tests/:testId" element={<TestQuestions />} />
       </Route>
     </Routes>
   );

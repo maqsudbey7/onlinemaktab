@@ -1,61 +1,80 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { FiBook, FiUsers, FiFileText, FiSun, FiMoon } from "react-icons/fi";
 import { useCourses } from "../../context/CourseContext";
-import { FiBook, FiUsers, FiLayers } from "react-icons/fi";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
   const { courses } = useCourses();
+  const [dark, setDark] = useState(false);
 
-  // Fake users data
-  const users = [
-    { id:1, name:"Ali", role:"student" },
-    { id:2, name:"Vali", role:"student" },
-    { id:3, name:"Olim", role:"teacher" },
-  ];
+  useEffect(() => {
+    const stored = localStorage.getItem("darkMode");
+    if (stored === "true") {
+      document.documentElement.classList.add("dark");
+      setDark(true);
+    }
+  }, []);
 
-  // Chart data (lessons count per course)
-  const chartData = courses.map(c => ({ name: c.title, lessons: c.lessonsCount }));
+  const toggleDark = () => {
+    document.documentElement.classList.toggle("dark");
+    setDark(!dark);
+    localStorage.setItem("darkMode", !dark);
+  };
+
+  const totalCourses = courses.length;
+  const totalModules = courses.reduce((sum, c) => sum + (c.modules?.length || 0), 0);
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow">
-          <FiBook className="text-4xl text-blue-500"/>
-          <div>
-            <p className="text-sm text-gray-500">Courses</p>
-            <p className="text-2xl font-bold">{courses.length}</p>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow">
-          <FiUsers className="text-4xl text-green-500"/>
-          <div>
-            <p className="text-sm text-gray-500">Users</p>
-            <p className="text-2xl font-bold">{users.length}</p>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded shadow flex items-center gap-4 hover:shadow-lg transition-shadow">
-          <FiLayers className="text-4xl text-purple-500"/>
-          <div>
-            <p className="text-sm text-gray-500">Modules</p>
-            <p className="text-2xl font-bold">{courses.reduce((sum,c)=>sum+c.modules.length,0)}</p>
-          </div>
-        </div>
+    <div className="space-y-8 ">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold dark:text-white text-black  ">Dashboard</h1>
+        <button
+          onClick={toggleDark}
+          className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+        >
+          {dark ? <FiSun size={20} /> : <FiMoon size={20} />}
+        </button>
       </div>
 
-      {/* Lessons chart */}
-      <div className="bg-white p-6 rounded shadow">
-        <h2 className="text-xl font-bold mb-4">Lessons per Course</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="lessons" stroke="#1D4ED8" strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
+      {/* Statistik kartalar */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 dark:text-white">
+        <StatCard title="Courses" value={totalCourses} icon={<FiBook size={24} />} />
+        <StatCard title="Modules" value={totalModules} icon={<FiFileText size={24} />} />
+        <StatCard title="Users" value="—" icon={<FiUsers size={24} />} />
+      </div>
+
+      {/* Oxirgi kurslar */}
+      <div className="bg-white dark:bg-gray-800 rounded shadow p-6 dark:text-white">
+        <h2 className="text-xl font-semibold mb-4">So‘nggi kurslar</h2>
+        {courses.length === 0 ? (
+          <p className="text-gray-500 dark:text-gray-400">Hozircha kurslar yo‘q</p>
+        ) : (
+          <ul className="space-y-3">
+            {courses.slice(-5).reverse().map(course => (
+              <li
+                key={course.id}
+                className="flex justify-between border-b border-gray-200 dark:border-gray-700 pb-2"
+              >
+                <span className="font-medium">{course.title}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {course.modules?.length || 0} modul
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ title, value, icon }) {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded shadow p-6 flex items-center gap-4 transform hover:-translate-y-1 hover:shadow-lg transition">
+      <div className="p-3 bg-blue-100 dark:bg-blue-700 text-blue-600 dark:text-white rounded">{icon}</div>
+      <div>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{title}</p>
+        <p className="text-2xl font-bold">{value}</p>
       </div>
     </div>
   );

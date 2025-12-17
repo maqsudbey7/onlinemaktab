@@ -5,51 +5,167 @@ import { courses as initialCourses } from "../data/courses";
 const CourseContext = createContext();
 
 export function CourseProvider({ children }) {
+  /* ===================== COURSES ===================== */
   const [courses, setCourses] = useState([]);
 
+  /* ===================== TEST SUBJECTS ===================== */
+  const [testSubjects, setTestSubjects] = useState([]);
+
+  /* ===================== LOAD ===================== */
   useEffect(() => {
-    const saved = localStorage.getItem("courses");
-    if (saved) setCourses(JSON.parse(saved));
+    const savedCourses = localStorage.getItem("courses");
+    const savedSubjects = localStorage.getItem("testSubjects");
+
+    if (savedCourses) setCourses(JSON.parse(savedCourses));
     else setCourses(initialCourses);
+
+    if (savedSubjects) setTestSubjects(JSON.parse(savedSubjects));
   }, []);
 
+  /* ===================== SAVE ===================== */
   useEffect(() => {
-    if (courses.length > 0) localStorage.setItem("courses", JSON.stringify(courses));
+    localStorage.setItem("courses", JSON.stringify(courses));
   }, [courses]);
 
-  // COURSES
-  const addCourse = (course) => setCourses(prev => [...prev, { id: Date.now(), modules: [], tests: [], ...course }]);
-  const updateCourse = (courseId, courseData) => setCourses(prev => prev.map(c => c.id === parseInt(courseId) ? { ...c, ...courseData } : c));
-  const deleteCourse = (courseId) => setCourses(prev => prev.filter(c => c.id !== parseInt(courseId)));
+  useEffect(() => {
+    localStorage.setItem("testSubjects", JSON.stringify(testSubjects));
+  }, [testSubjects]);
 
-  // MODULES & LESSONS
-  const addModule = (courseId, module) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, modules: [...c.modules, { id: Date.now(), lessons: [], ...module }] } : c));
-  const addLesson = (courseId, moduleId, lesson) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, modules: c.modules.map(m => m.id === moduleId ? { ...m, lessons: [...m.lessons, { id: Date.now(), ...lesson }] } : m) } : c));
+  /* ===================== COURSES ===================== */
+  const addCourse = (course) =>
+    setCourses(prev => [
+      ...prev,
+      { id: Date.now(), modules: [], tests: [], ...course }
+    ]);
 
-  // TESTS
-  const addTest = (courseId, testData) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: [...(c.tests || []), { id: Date.now(), questions: [], ...testData }] } : c));
-  const updateTest = (courseId, testId, testData) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: c.tests.map(t => t.id === parseInt(testId) ? { ...t, ...testData } : t) } : c));
-  const deleteTest = (courseId, testId) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: c.tests.filter(t => t.id !== parseInt(testId)) } : c));
+  const updateCourse = (courseId, data) =>
+    setCourses(prev =>
+      prev.map(c => c.id === +courseId ? { ...c, ...data } : c)
+    );
 
-  // QUESTIONS
-  const addQuestion = (courseId, testId, question) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: c.tests.map(t => t.id === parseInt(testId) ? { ...t, questions: [...(t.questions || []), { id: Date.now(), ...question }] } : t) } : c));
-  const updateQuestion = (courseId, testId, questionId, questionData) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: c.tests.map(t => t.id === parseInt(testId) ? { ...t, questions: t.questions.map(q => q.id === parseInt(questionId) ? { ...q, ...questionData } : q) } : t) } : c));
-  const deleteQuestion = (courseId, testId, questionId) => setCourses(prev => prev.map(c => c.id === courseId ? { ...c, tests: c.tests.map(t => t.id === parseInt(testId) ? { ...t, questions: t.questions.filter(q => q.id !== parseInt(questionId)) } : t) } : c));
+  const deleteCourse = (courseId) =>
+    setCourses(prev => prev.filter(c => c.id !== +courseId));
 
+  /* ===================== MODULES ===================== */
+  const addModule = (courseId, module) =>
+    setCourses(prev =>
+      prev.map(c =>
+        c.id === courseId
+          ? { ...c, modules: [...c.modules, { id: Date.now(), lessons: [], ...module }] }
+          : c
+      )
+    );
+
+  const addLesson = (courseId, moduleId, lesson) =>
+    setCourses(prev =>
+      prev.map(c =>
+        c.id === courseId
+          ? {
+              ...c,
+              modules: c.modules.map(m =>
+                m.id === moduleId
+                  ? { ...m, lessons: [...m.lessons, { id: Date.now(), ...lesson }] }
+                  : m
+              )
+            }
+          : c
+      )
+    );
+
+  /* ===================== TEST SUBJECT (FAN) ===================== */
+  const addTestSubject = (data) =>
+    setTestSubjects(prev => [
+      ...prev,
+      { id: Date.now(), tests: [], ...data }
+    ]);
+
+  const deleteTestSubject = (subjectId) =>
+    setTestSubjects(prev => prev.filter(s => s.id !== +subjectId));
+
+  /* ===================== TESTS ===================== */
+  const addTest = (subjectId, test) =>
+    setTestSubjects(prev =>
+      prev.map(s =>
+        s.id === subjectId
+          ? {
+              ...s,
+              tests: [...s.tests, { id: Date.now(), questions: [], ...test }]
+            }
+          : s
+      )
+    );
+
+  const deleteTest = (subjectId, testId) =>
+    setTestSubjects(prev =>
+      prev.map(s =>
+        s.id === subjectId
+          ? { ...s, tests: s.tests.filter(t => t.id !== +testId) }
+          : s
+      )
+    );
+
+  /* ===================== QUESTIONS ===================== */
+  const addQuestion = (subjectId, testId, question) =>
+    setTestSubjects(prev =>
+      prev.map(s =>
+        s.id === subjectId
+          ? {
+              ...s,
+              tests: s.tests.map(t =>
+                t.id === testId
+                  ? {
+                      ...t,
+                      questions: [...t.questions, { id: Date.now(), ...question }]
+                    }
+                  : t
+              )
+            }
+          : s
+      )
+    );
+
+  const deleteQuestion = (subjectId, testId, questionId) =>
+    setTestSubjects(prev =>
+      prev.map(s =>
+        s.id === subjectId
+          ? {
+              ...s,
+              tests: s.tests.map(t =>
+                t.id === testId
+                  ? {
+                      ...t,
+                      questions: t.questions.filter(q => q.id !== +questionId)
+                    }
+                  : t
+              )
+            }
+          : s
+      )
+    );
+
+  /* ===================== PROVIDER ===================== */
   return (
     <CourseContext.Provider
       value={{
+        /* courses */
         courses,
         addCourse,
         updateCourse,
         deleteCourse,
         addModule,
         addLesson,
+
+        /* test subjects */
+        testSubjects,
+        addTestSubject,
+        deleteTestSubject,
+
+        /* tests */
         addTest,
-        updateTest,
         deleteTest,
+
+        /* questions */
         addQuestion,
-        updateQuestion,
         deleteQuestion
       }}
     >
