@@ -1,18 +1,17 @@
+// Modules.jsx
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCourses } from "../../../context/CourseContext";
 
 export default function Modules() {
   const { courseId } = useParams();
-  const { courses, addModule, addLesson } = useCourses();
+  const { courses, addModule, addLesson, deleteModule, deleteLesson } = useCourses();
   const course = courses.find(c => c.id === parseInt(courseId));
 
   const [moduleTitle, setModuleTitle] = useState("");
-
-  // 🔥 MUHIM: har bir modul uchun alohida lesson input
   const [lessonInputs, setLessonInputs] = useState({});
 
-  if (!course) return <p>Kurs topilmadi!</p>;
+  if (!course) return <p className="text-red-500 dark:text-red-400">Kurs topilmadi!</p>;
 
   const handleAddModule = () => {
     if (!moduleTitle) return;
@@ -20,34 +19,35 @@ export default function Modules() {
     setModuleTitle("");
   };
 
+  const handleDeleteModule = (modId) => {
+    if (window.confirm("Bu modulni o‘chirmoqchimisiz?")) {
+      deleteModule(course.id, modId);
+    }
+  };
+
   const handleLessonChange = (modId, field, value) => {
     setLessonInputs(prev => ({
       ...prev,
-      [modId]: {
-        ...prev[modId],
-        [field]: value
-      }
+      [modId]: { ...prev[modId], [field]: value }
     }));
   };
 
   const handleAddLesson = (modId) => {
     const lesson = lessonInputs[modId];
     if (!lesson?.title || !lesson?.video) return;
-
     addLesson(course.id, modId, lesson);
+    setLessonInputs(prev => ({ ...prev, [modId]: { title: "", video: "" } }));
+  };
 
-    // tozalash
-    setLessonInputs(prev => ({
-      ...prev,
-      [modId]: { title: "", video: "" }
-    }));
+  const handleDeleteLesson = (modId, lessonId) => {
+    if (window.confirm("Bu darsni o‘chirmoqchimisiz?")) {
+      deleteLesson(course.id, modId, lessonId);
+    }
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">
-        {course.title} – Modules
-      </h1>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold dark:text-white">{course.title} – Modules</h1>
 
       {/* MODULE QO‘SHISH */}
       <div className="flex gap-2 mb-6">
@@ -55,11 +55,11 @@ export default function Modules() {
           value={moduleTitle}
           onChange={e => setModuleTitle(e.target.value)}
           placeholder="Module Title"
-          className="border p-2 rounded flex-1"
+          className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         />
         <button
           onClick={handleAddModule}
-          className="bg-green-600 text-white px-3 rounded"
+          className="bg-green-600 hover:bg-green-700 text-white px-3 rounded transition"
         >
           Add Module
         </button>
@@ -67,48 +67,63 @@ export default function Modules() {
 
       {/* MODULE LIST */}
       {course.modules.map(mod => (
-        <div key={mod.id} className="bg-white p-4 mb-4 rounded shadow">
-          <h2 className="font-bold text-blue-600 mb-2">{mod.title}</h2>
+        <div
+          key={mod.id}
+          className="bg-white dark:bg-gray-800 p-4 mb-4 rounded-xl shadow hover:shadow-lg transition"
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="font-bold text-blue-600">{mod.title}</h2>
+            <button
+              onClick={() => handleDeleteModule(mod.id)}
+              className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-500 transition font-medium"
+            >
+              🗑 Delete Module
+            </button>
+          </div>
 
           {/* LESSON INPUT */}
-          <div className="flex gap-2 mb-3">
+          <div className="flex gap-2 mb-3 flex-wrap">
             <input
               value={lessonInputs[mod.id]?.title || ""}
-              onChange={e =>
-                handleLessonChange(mod.id, "title", e.target.value)
-              }
+              onChange={e => handleLessonChange(mod.id, "title", e.target.value)}
               placeholder="Lesson Title"
-              className="border p-2 rounded flex-1"
+              className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             <input
               value={lessonInputs[mod.id]?.video || ""}
-              onChange={e =>
-                handleLessonChange(mod.id, "video", e.target.value)
-              }
+              onChange={e => handleLessonChange(mod.id, "video", e.target.value)}
               placeholder="Video URL"
-              className="border p-2 rounded flex-1"
+              className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             <button
               onClick={() => handleAddLesson(mod.id)}
-              className="bg-green-500 text-white px-3 rounded"
+              className="bg-green-500 hover:bg-green-600 text-white px-3 rounded transition"
             >
               Add Lesson
             </button>
           </div>
 
           {/* LESSON LIST */}
-          <ul className="list-disc ml-5">
+          <ul className="list-disc ml-5 dark:text-gray-200 space-y-1">
             {mod.lessons.map(l => (
-              <li key={l.id}>
-                {l.title} —{" "}
-                <a
-                  href={l.video}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-blue-500 underline"
+              <li key={l.id} className="flex justify-between items-center">
+                <span>
+                  {l.title} —{" "}
+                  <a
+                    href={l.video}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-500 dark:text-blue-400 underline"
+                  >
+                    Video
+                  </a>
+                </span>
+                <button
+                  onClick={() => handleDeleteLesson(mod.id, l.id)}
+                  className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-500 transition text-sm"
                 >
-                  Video
-                </a>
+                  🗑
+                </button>
               </li>
             ))}
           </ul>

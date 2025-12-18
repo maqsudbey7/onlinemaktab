@@ -11,11 +11,14 @@ import Modules from "./pages/AdminKurslar/Modules";
 import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Protected from "./pages/Protected";
+// TEST PAGES
+import TestSubjects from "../admin/pages/AdminTest/TestSubjects";
+import CreateTestSubject from "../admin/pages/AdminTest/CreateSubject";
+import SubjectTests from "../admin/pages/AdminTest/SubjectTests";
+import CreateTest from "../admin/pages/AdminTest/CreateTest";
+import EditTest from "./pages/AdminTest/EditTest";
 
-// Tests
-import AllTests from "./pages/AdminTest/AllTests"; // Barcha testlar ro'yxati
-import Tests from "./pages/AdminTest/Tests"; // Kursga oid testlar
-import TestQuestions from "./pages/AdminTest/TestQuestions"; // Savollar
+
 
 export default function AdminRoutes() {
   return (
@@ -44,13 +47,15 @@ export default function AdminRoutes() {
         {/* Users */}
         <Route path="users" element={<Users />} />
 
-        {/* Tests */}
-        {/* Umumiy testlar sahifasi */}
-        <Route path="tests" element={<AllTests />} />
-        {/* Kursga oid testlar */}
-        <Route path="courses/:courseId/tests" element={<Tests />} />
-        {/* Test savollarini boshqarish */}
-        <Route path="courses/:courseId/tests/:testId" element={<TestQuestions />} />
+        {/* Test */}
+
+         <Route path="tests" element={<TestSubjects />} />
+        <Route path="tests/create" element={<CreateTestSubject />} />
+        <Route path="tests/:subjectId" element={<SubjectTests />} />
+        <Route path="tests/:subjectId/create" element={<CreateTest />} />
+        <Route path="/admin/tests/:subjectId/edit/:testId" element={<EditTest />} />
+
+       
       </Route>
     </Routes>
   );
