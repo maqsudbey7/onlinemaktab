@@ -9,7 +9,7 @@ import CourseDetail from "./page/Kurslar/CourseDetail";
 import Courses from "./page/Kurslar/Courses";
 import LessonDetail from "./page/Kurslar/LessonDetail";
 import Login from "./components/Login";
-import Register from "./components/Register";
+// import Register from "./components/Register";
 import Profile from "./page/userProfile/Profile";
 import ContactUs from "./page/Contact Us/ContactUs";
 import NotFound from "./components/NotFound/NotFound";
@@ -45,7 +45,7 @@ export default function App() {
 
         {/* Auth pages */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* <Route path="/register" element={<Register />} /> */}
 
         {/* Protected example */}
         {/* <Route path="/profile" element={<PrivateRoute><Profile/></PrivateRoute>} /> */}

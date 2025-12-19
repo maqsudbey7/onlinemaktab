@@ -54,21 +54,19 @@ export default function TestsSection() {
   };
 
   return (
-    <section
-      className="py-32 px-6 transition-colors duration-300"
-      
-    >
-      <BackgroundLogos/>
+    <section className="py-20 px-4 sm:px-6 lg:px-8 relative transition-colors duration-300">
+      <BackgroundLogos />
+
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h2 className="text-4xl md:text-5xl dark:text-white font-extrabold text-gray-900 mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
           Interaktiv testlar
         </h2>
-        <p className="text-gray-600 text-lg md:text-xl dark:text-white/60">
+        <p className="text-gray-600 dark:text-white/60 text-base sm:text-lg md:text-xl">
           Har bir fan bo‘yicha bilimlaringizni sinab ko‘ring. Testlarni tugatgach, natijalarni darhol ko‘rishingiz mumkin.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto">
         {tests.map((test, index) => (
           <motion.div
             key={index}
@@ -76,23 +74,29 @@ export default function TestsSection() {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="relative rounded-xl overflow-hidden shadow-2xl cursor-pointer group"
+            className="relative rounded-2xl overflow-hidden shadow-lg cursor-pointer group hover:shadow-2xl transition-shadow duration-300"
             onClick={() => handleStartTest(test.id)}
           >
+            {/* Gradient background */}
             <div
-              className="absolute inset-0 rounded-xl transition-opacity duration-300 group-hover:opacity-90"
+              className="absolute inset-0 rounded-2xl transition-opacity duration-300 group-hover:opacity-95"
               style={{ background: `linear-gradient(135deg, ${test.gradient[0]}, ${test.gradient[1]})` }}
             ></div>
 
-            <div className="relative p-6 flex flex-col items-start z-10">
-              <div className="absolute top-4 right-4 text-4xl">{test.icon}</div>
+            {/* Content */}
+            <div className="relative p-5 sm:p-6 z-10 flex flex-col">
+              <div className="absolute top-4 right-4 text-3xl sm:text-4xl">{test.icon}</div>
 
-              <h3 className="text-2xl font-bold text-white mb-2 group-hover:underline">{test.title}</h3>
-              <p className="text-white/80 mb-1">{test.questions}+ savollar</p>
-              <p className="text-white/70 mb-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 group-hover:underline">
+                {test.title}
+              </h3>
+
+              <p className="text-white/80 text-sm sm:text-base mb-1">{test.questions}+ savollar</p>
+              <p className="text-white/70 text-sm sm:text-base mb-3">
                 Qiyinchilik: <span className="font-semibold">{test.difficulty}</span>
               </p>
 
+              {/* Progress bar */}
               <div className="w-full bg-white/20 h-2 rounded-full mb-4">
                 <div
                   className="bg-white h-2 rounded-full transition-all duration-500"
@@ -100,13 +104,15 @@ export default function TestsSection() {
                 ></div>
               </div>
 
-              <button className="px-5 py-2 bg-white/20 text-white font-semibold rounded-lg shadow hover:bg-white/40 transition">
+              {/* Button */}
+              <button className="mt-auto px-4 py-2 sm:px-5 sm:py-2 bg-white/20 text-white font-semibold rounded-lg shadow hover:bg-white/40 transition">
                 Boshlash
               </button>
             </div>
 
-            <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-white/5 rounded-full blur-3xl"></div>
+            {/* Decorative blurred shapes */}
+            <div className="absolute -bottom-6 -right-6 w-20 h-20 bg-white/10 rounded-full blur-2xl"></div>
+            <div className="absolute -top-4 -left-4 w-28 h-28 bg-white/5 rounded-full blur-3xl"></div>
           </motion.div>
         ))}
       </div>

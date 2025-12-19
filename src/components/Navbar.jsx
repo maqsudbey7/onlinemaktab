@@ -48,10 +48,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Bosh sahifa", path: "/" },
-    { name: "Kurslar", path: "/courses" },
-    { name: "Testlar", path: "/test" },
-    { name: "Contact Us", path: "/contactUs" },
+    { name: "Home", path: "/" },
+    { name: "Courses", path: "/courses" },
+    { name: "Quizs", path: "/test" },
+    { name: "Contact", path: "/contactUs" },
   ];
 
   const displayName = user ? (user.name.length > 9 ? user.name.slice(0, 9) + "..." : user.name) : "";
