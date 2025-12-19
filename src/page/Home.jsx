@@ -9,7 +9,7 @@ import teacher4 from "../../public/express-backend.webp";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaCalculator, FaFlask, FaLeaf, FaAtom, FaBook } from "react-icons/fa";
-import { GiSpellBook } from "react-icons/gi";
+// import { GiSpellBook } from "react-icons/gi";  
 import TeacherCard from "../components/TeacherCard";
 import { Link } from "react-router-dom";
 import BackgroundLogos from "../components/BackgroundLogos/BackgroundLogos";
@@ -87,10 +87,10 @@ export default function Home() {
               <img src={heroImg} alt="hero" className="rounded-xl object-cover w-full h-72" />
             </div>
 
-            <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -left-6 -top-6 p-4 bg-white dark:bg-gray-700 rounded-2xl shadow-lg text-gray-900 dark:text-white">
+            {/* <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute -left-6 -top-6 p-4 bg-white dark:bg-gray-700 rounded-2xl shadow-lg text-gray-900 dark:text-white">
               <div className="text-sm font-semibold">Mentor: Nodir Khalilov</div>
               <div className="text-xs">UX dizayn — tajribali o‘qituvchi</div>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
         </div>

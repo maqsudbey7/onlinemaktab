@@ -5,22 +5,21 @@ const CourseContext = createContext();
 
 export function CourseProvider({ children }) {
   /* ===================== COURSES ===================== */
-  const [courses, setCourses] = useState([]);
+  // ❗ MUHIM: bo‘sh array emas, initialCourses
+  const [courses, setCourses] = useState(initialCourses);
   const [favorites, setFavorites] = useState([]);
   const [watched, setWatched] = useState({});
 
   /* ===================== TEST SUBJECTS ===================== */
   const [testSubjects, setTestSubjects] = useState([]);
 
-  /* ===================== LOAD ===================== */
+  /* ===================== LOAD (LOCALSTORAGE) ===================== */
   useEffect(() => {
     const savedCourses = localStorage.getItem("courses");
     const savedTests = localStorage.getItem("testSubjects");
     const savedWatched = localStorage.getItem("watchedLessons");
 
     if (savedCourses) setCourses(JSON.parse(savedCourses));
-    else setCourses(initialCourses);
-
     if (savedTests) setTestSubjects(JSON.parse(savedTests));
     if (savedWatched) setWatched(JSON.parse(savedWatched));
   }, []);
@@ -39,50 +38,56 @@ export function CourseProvider({ children }) {
   }, [watched]);
 
   /* ===================== FAVORITES ===================== */
-  const toggleFavorite = (id) =>
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+  const toggleFavorite = (id) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     );
+  };
 
   /* ===================== WATCHED LESSONS ===================== */
   const markLessonWatched = (courseId, moduleIndex, lessonIndex) => {
-    setWatched(prev => {
+    setWatched((prev) => {
       const updated = {
         ...prev,
         [courseId]: {
           ...prev[courseId],
-          [`${moduleIndex}-${lessonIndex}`]: true
-        }
+          [`${moduleIndex}-${lessonIndex}`]: true,
+        },
       };
       return updated;
     });
   };
 
   /* ===================== COURSES CRUD ===================== */
-  const addCourse = (course) =>
-    setCourses(prev => [
+  const addCourse = (course) => {
+    setCourses((prev) => [
       ...prev,
       {
         id: Date.now(),
         modules: [],
-        ...course
-      }
+        ...course,
+      },
     ]);
+  };
 
-  const updateCourse = (courseId, data) =>
-    setCourses(prev =>
-      prev.map(c =>
+  const updateCourse = (courseId, data) => {
+    setCourses((prev) =>
+      prev.map((c) =>
         c.id === +courseId ? { ...c, ...data } : c
       )
     );
+  };
 
-  const deleteCourse = (courseId) =>
-    setCourses(prev => prev.filter(c => c.id !== +courseId));
+  const deleteCourse = (courseId) => {
+    setCourses((prev) =>
+      prev.filter((c) => c.id !== +courseId)
+    );
+  };
 
   /* ===================== MODULES ===================== */
-  const addModule = (courseId, module) =>
-    setCourses(prev =>
-      prev.map(c =>
+  const addModule = (courseId, module) => {
+    setCourses((prev) =>
+      prev.map((c) =>
         c.id === +courseId
           ? {
               ...c,
@@ -91,79 +96,116 @@ export function CourseProvider({ children }) {
                 {
                   id: Date.now(),
                   lessons: [],
-                  ...module
-                }
-              ]
+                  ...module,
+                },
+              ],
             }
           : c
       )
     );
+  };
 
-  const deleteModule = (courseId, moduleId) =>
-    setCourses(prev =>
-      prev.map(c =>
-        c.id === +courseId
-          ? { ...c, modules: c.modules.filter(m => m.id !== +moduleId) }
-          : c
-      )
-    );
-
-  /* ===================== LESSONS ===================== */
-  const addLesson = (courseId, moduleId, lesson) =>
-    setCourses(prev =>
-      prev.map(c =>
+  const deleteModule = (courseId, moduleId) => {
+    setCourses((prev) =>
+      prev.map((c) =>
         c.id === +courseId
           ? {
               ...c,
-              modules: c.modules.map(m =>
-                m.id === +moduleId
-                  ? { ...m, lessons: [...m.lessons, { id: Date.now(), ...lesson }] }
-                  : m
-              )
+              modules: c.modules.filter(
+                (m) => m.id !== +moduleId
+              ),
             }
           : c
       )
     );
+  };
+
+  /* ===================== LESSONS ===================== */
+  const addLesson = (courseId, moduleId, lesson) => {
+    setCourses((prev) =>
+      prev.map((c) =>
+        c.id === +courseId
+          ? {
+              ...c,
+              modules: c.modules.map((m) =>
+                m.id === +moduleId
+                  ? {
+                      ...m,
+                      lessons: [
+                        ...m.lessons,
+                        { id: Date.now(), ...lesson },
+                      ],
+                    }
+                  : m
+              ),
+            }
+          : c
+      )
+    );
+  };
 
   /* ===================== TEST SUBJECTS ===================== */
-  const addTestSubject = (subject) =>
-    setTestSubjects(prev => [
+  const addTestSubject = (subject) => {
+    setTestSubjects((prev) => [
       ...prev,
-      { id: Date.now(), tests: [], ...subject }
+      { id: Date.now(), tests: [], ...subject },
     ]);
+  };
 
-  const deleteTestSubject = (subjectId) =>
-    setTestSubjects(prev =>
-      prev.filter(s => s.id !== +subjectId)
+  const deleteTestSubject = (subjectId) => {
+    setTestSubjects((prev) =>
+      prev.filter((s) => s.id !== +subjectId)
     );
+  };
 
   /* ===================== TEST QUESTIONS ===================== */
-  const addTestQuestion = (subjectId, test) =>
-    setTestSubjects(prev =>
-      prev.map(s =>
+  const addTestQuestion = (subjectId, test) => {
+    setTestSubjects((prev) =>
+      prev.map((s) =>
         s.id === +subjectId
-          ? { ...s, tests: [...s.tests, { id: Date.now(), ...test }] }
+          ? {
+              ...s,
+              tests: [
+                ...s.tests,
+                { id: Date.now(), ...test },
+              ],
+            }
           : s
       )
     );
+  };
 
-  const deleteTestQuestion = (subjectId, testId) =>
-    setTestSubjects(prev =>
-      prev.map(s =>
+  const deleteTestQuestion = (subjectId, testId) => {
+    setTestSubjects((prev) =>
+      prev.map((s) =>
         s.id === +subjectId
-          ? { ...s, tests: s.tests.filter(t => t.id !== +testId) }
+          ? {
+              ...s,
+              tests: s.tests.filter(
+                (t) => t.id !== +testId
+              ),
+            }
           : s
       )
     );
+  };
 
-  const updateTest = (subjectId, testId, data) =>
-    setTestSubjects(prev =>
-      prev.map(s =>
+  const updateTest = (subjectId, testId, data) => {
+    setTestSubjects((prev) =>
+      prev.map((s) =>
         s.id === +subjectId
-          ? { ...s, tests: s.tests.map(t => t.id === +testId ? { ...t, ...data } : t) }
+          ? {
+              ...s,
+              tests: s.tests.map((t) =>
+                t.id === +testId
+                  ? { ...t, ...data }
+                  : t
+              ),
+            }
           : s
       )
     );
+  };
 
   /* ===================== PROVIDER ===================== */
   return (

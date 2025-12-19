@@ -45,9 +45,13 @@ export default function AdminLayout() {
             <Link to="/admin/users" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-700 transition-colors">
               <FiUsers /> Users
             </Link>
-            <Link to="/" className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-700 transition-colors">
-              <FiUsers /> Home
-            </Link>
+            <Link
+  to="/"
+  className="flex items-center gap-3 p-3 rounded hover:bg-blue-100 dark:hover:bg-blue-700 transition-colors"
+>
+  <FiHome className="text-xl" />
+  <span>Home</span>
+</Link>
           </nav>
         </div>
 
