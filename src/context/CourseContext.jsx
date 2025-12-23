@@ -4,84 +4,111 @@ import { courses as initialCourses } from "../data/courses";
 const CourseContext = createContext();
 
 export function CourseProvider({ children }) {
-  /* ===================== COURSES ===================== */
-  // ❗ MUHIM: bo‘sh array emas, initialCourses
+  /* ===================== STATES ===================== */
   const [courses, setCourses] = useState(initialCourses);
   const [favorites, setFavorites] = useState([]);
   const [watched, setWatched] = useState({});
-
-  /* ===================== TEST SUBJECTS ===================== */
   const [testSubjects, setTestSubjects] = useState([]);
 
-  /* ===================== LOAD (LOCALSTORAGE) ===================== */
+  /* ===================== LOAD FROM LOCALSTORAGE ===================== */
   useEffect(() => {
-    const savedCourses = localStorage.getItem("courses");
-    const savedTests = localStorage.getItem("testSubjects");
-    const savedWatched = localStorage.getItem("watchedLessons");
+    const c = localStorage.getItem("courses");
+    const f = localStorage.getItem("favorites");
+    const w = localStorage.getItem("watchedLessons");
+    const t = localStorage.getItem("testSubjects");
 
-    if (savedCourses) setCourses(JSON.parse(savedCourses));
-    if (savedTests) setTestSubjects(JSON.parse(savedTests));
-    if (savedWatched) setWatched(JSON.parse(savedWatched));
+    if (c) setCourses(JSON.parse(c));
+    if (f) setFavorites(JSON.parse(f));
+    if (w) setWatched(JSON.parse(w));
+    if (t) setTestSubjects(JSON.parse(t));
   }, []);
 
-  /* ===================== SAVE ===================== */
+  /* ===================== SAVE TO LOCALSTORAGE ===================== */
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
   }, [courses]);
 
   useEffect(() => {
-    localStorage.setItem("testSubjects", JSON.stringify(testSubjects));
-  }, [testSubjects]);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   useEffect(() => {
     localStorage.setItem("watchedLessons", JSON.stringify(watched));
   }, [watched]);
 
+  useEffect(() => {
+    localStorage.setItem("testSubjects", JSON.stringify(testSubjects));
+  }, [testSubjects]);
+
   /* ===================== FAVORITES ===================== */
-  const toggleFavorite = (id) => {
+  const toggleFavorite = (courseId) => {
     setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+      prev.includes(courseId)
+        ? prev.filter((id) => id !== courseId)
+        : [...prev, courseId]
     );
   };
 
-  /* ===================== WATCHED LESSONS ===================== */
+  const resetFavorites = () => setFavorites([]);
+
+  /* ===================== WATCHED ===================== */
   const markLessonWatched = (courseId, moduleIndex, lessonIndex) => {
+    setWatched((prev) => ({
+      ...prev,
+      [courseId]: {
+        ...prev[courseId],
+        [`${moduleIndex}-${lessonIndex}`]: true,
+      },
+    }));
+  };
+
+  const isLessonWatched = (courseId, moduleIndex, lessonIndex) => {
+    return watched?.[courseId]?.[`${moduleIndex}-${lessonIndex}`] || false;
+  };
+
+  const resetCourseProgress = (courseId) => {
     setWatched((prev) => {
-      const updated = {
-        ...prev,
-        [courseId]: {
-          ...prev[courseId],
-          [`${moduleIndex}-${lessonIndex}`]: true,
-        },
-      };
+      const updated = { ...prev };
+      delete updated[courseId];
       return updated;
     });
+  };
+
+  /* ===================== COURSE PROGRESS ===================== */
+  const getCourseProgress = (courseId) => {
+    const course = courses.find((c) => c.id === +courseId);
+    if (!course) return 0;
+
+    let total = 0;
+    let done = 0;
+
+    course.modules.forEach((m, mi) => {
+      m.lessons.forEach((_, li) => {
+        total++;
+        if (watched?.[courseId]?.[`${mi}-${li}`]) done++;
+      });
+    });
+
+    return total === 0 ? 0 : Math.round((done / total) * 100);
   };
 
   /* ===================== COURSES CRUD ===================== */
   const addCourse = (course) => {
     setCourses((prev) => [
       ...prev,
-      {
-        id: Date.now(),
-        modules: [],
-        ...course,
-      },
+      { id: Date.now(), modules: [], ...course },
     ]);
   };
 
   const updateCourse = (courseId, data) => {
     setCourses((prev) =>
-      prev.map((c) =>
-        c.id === +courseId ? { ...c, ...data } : c
-      )
+      prev.map((c) => (c.id === +courseId ? { ...c, ...data } : c))
     );
   };
 
   const deleteCourse = (courseId) => {
-    setCourses((prev) =>
-      prev.filter((c) => c.id !== +courseId)
-    );
+    setCourses((prev) => prev.filter((c) => c.id !== +courseId));
+    resetCourseProgress(courseId);
   };
 
   /* ===================== MODULES ===================== */
@@ -93,11 +120,7 @@ export function CourseProvider({ children }) {
               ...c,
               modules: [
                 ...c.modules,
-                {
-                  id: Date.now(),
-                  lessons: [],
-                  ...module,
-                },
+                { id: Date.now(), lessons: [], ...module },
               ],
             }
           : c
@@ -109,12 +132,7 @@ export function CourseProvider({ children }) {
     setCourses((prev) =>
       prev.map((c) =>
         c.id === +courseId
-          ? {
-              ...c,
-              modules: c.modules.filter(
-                (m) => m.id !== +moduleId
-              ),
-            }
+          ? { ...c, modules: c.modules.filter((m) => m.id !== +moduleId) }
           : c
       )
     );
@@ -131,10 +149,49 @@ export function CourseProvider({ children }) {
                 m.id === +moduleId
                   ? {
                       ...m,
-                      lessons: [
-                        ...m.lessons,
-                        { id: Date.now(), ...lesson },
-                      ],
+                      lessons: [...m.lessons, { id: Date.now(), ...lesson }],
+                    }
+                  : m
+              ),
+            }
+          : c
+      )
+    );
+  };
+
+  const updateLesson = (courseId, moduleId, lessonId, data) => {
+    setCourses((prev) =>
+      prev.map((c) =>
+        c.id === +courseId
+          ? {
+              ...c,
+              modules: c.modules.map((m) =>
+                m.id === +moduleId
+                  ? {
+                      ...m,
+                      lessons: m.lessons.map((l) =>
+                        l.id === +lessonId ? { ...l, ...data } : l
+                      ),
+                    }
+                  : m
+              ),
+            }
+          : c
+      )
+    );
+  };
+
+  const deleteLesson = (courseId, moduleId, lessonId) => {
+    setCourses((prev) =>
+      prev.map((c) =>
+        c.id === +courseId
+          ? {
+              ...c,
+              modules: c.modules.map((m) =>
+                m.id === +moduleId
+                  ? {
+                      ...m,
+                      lessons: m.lessons.filter((l) => l.id !== +lessonId),
                     }
                   : m
               ),
@@ -153,23 +210,14 @@ export function CourseProvider({ children }) {
   };
 
   const deleteTestSubject = (subjectId) => {
-    setTestSubjects((prev) =>
-      prev.filter((s) => s.id !== +subjectId)
-    );
+    setTestSubjects((prev) => prev.filter((s) => s.id !== +subjectId));
   };
 
-  /* ===================== TEST QUESTIONS ===================== */
   const addTestQuestion = (subjectId, test) => {
     setTestSubjects((prev) =>
       prev.map((s) =>
         s.id === +subjectId
-          ? {
-              ...s,
-              tests: [
-                ...s.tests,
-                { id: Date.now(), ...test },
-              ],
-            }
+          ? { ...s, tests: [...s.tests, { id: Date.now(), ...test }] }
           : s
       )
     );
@@ -179,12 +227,7 @@ export function CourseProvider({ children }) {
     setTestSubjects((prev) =>
       prev.map((s) =>
         s.id === +subjectId
-          ? {
-              ...s,
-              tests: s.tests.filter(
-                (t) => t.id !== +testId
-              ),
-            }
+          ? { ...s, tests: s.tests.filter((t) => t.id !== +testId) }
           : s
       )
     );
@@ -197,9 +240,7 @@ export function CourseProvider({ children }) {
           ? {
               ...s,
               tests: s.tests.map((t) =>
-                t.id === +testId
-                  ? { ...t, ...data }
-                  : t
+                t.id === +testId ? { ...t, ...data } : t
               ),
             }
           : s
@@ -214,15 +255,27 @@ export function CourseProvider({ children }) {
         courses,
         favorites,
         watched,
+        testSubjects,
+
         toggleFavorite,
+        resetFavorites,
+
         markLessonWatched,
+        isLessonWatched,
+        resetCourseProgress,
+        getCourseProgress,
+
         addCourse,
         updateCourse,
         deleteCourse,
+
         addModule,
-        addLesson,
         deleteModule,
-        testSubjects,
+
+        addLesson,
+        updateLesson,
+        deleteLesson,
+
         addTestSubject,
         deleteTestSubject,
         addTestQuestion,

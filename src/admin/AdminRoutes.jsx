@@ -8,7 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/AdminKurslar/Courses";
 import CourseForm from "./pages/AdminKurslar/CourseForm";
 import Modules from "./pages/AdminKurslar/Modules";
-import Users from "./pages/Users";
+// import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Protected from "./pages/Protected";
 // TEST PAGES
@@ -17,6 +17,8 @@ import CreateTestSubject from "../admin/pages/AdminTest/CreateSubject";
 import SubjectTests from "../admin/pages/AdminTest/SubjectTests";
 import CreateTest from "../admin/pages/AdminTest/CreateTest";
 import EditTest from "./pages/AdminTest/EditTest";
+import NotFound from "../components/NotFound/NotFound";
+
 
 
 
@@ -45,7 +47,7 @@ export default function AdminRoutes() {
         <Route path="courses/:courseId/modules" element={<Modules />} />
 
         {/* Users */}
-        <Route path="users" element={<Users />} />
+        {/* <Route path="users" element={<Users />} /> */}
 
         {/* Test */}
 
@@ -54,6 +56,9 @@ export default function AdminRoutes() {
         <Route path="tests/:subjectId" element={<SubjectTests />} />
         <Route path="tests/:subjectId/create" element={<CreateTest />} />
         <Route path="/admin/tests/:subjectId/edit/:testId" element={<EditTest />} />
+
+        <Route path="*" element={<NotFound/>} />
+
 
        
       </Route>

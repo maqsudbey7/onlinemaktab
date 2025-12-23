@@ -30,24 +30,33 @@ export default function BackgroundLogos() {
 
   const icons = [FaCalculator, FaAtom, FaBook, FaFlask, FaLeaf, GiSpellBook];
 
-  return (
-    <div className="fixed inset-1  pointer-events-none z-0 overflow-hidden">
-      {positions.map((pos, i) => {
-        const Icon = icons[i % icons.length];
-        return (
-          <Icon
-            key={i}
-            className={`${colorClasses[i % colorClasses.length]} absolute`}
-            style={{
-              top: pos.top,
-              left: pos.left,
-              fontSize: "2.5rem",  // kichikroq qildik
-              opacity: 0.2,         // xiraroq qilish uchun pasaytirdik
-             
-            }}
-          />
-        );
-      })}
-    </div>
-  );
+ return (
+ <div
+  className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+  style={{
+    background: document.documentElement.classList.contains('dark')
+      ? "linear-gradient(135deg, rgba(30,30,60,0.2) 0%, rgba(50,50,80,0.3) 100%)" // dark mode kok/gray gradient
+      : "linear-gradient(135deg, rgba(255,192,203,0.15) 0%, rgba(200,200,200,0.1) 100%)", // light mode pink/gray
+  }}
+>
+    {positions.map((pos, i) => {
+      const Icon = icons[i % icons.length];
+      return (
+        <Icon
+          key={i}
+          className={`${colorClasses[i % colorClasses.length]} absolute`}
+          style={{
+            top: pos.top,
+            left: pos.left,
+            fontSize: "2.5rem",
+            opacity: 0.2, // ikonalarni hali ham xiraroq
+          }}
+        />
+      );
+    })}
+  </div>
+);
+
 }
+
+

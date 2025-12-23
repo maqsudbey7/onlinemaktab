@@ -1,4 +1,3 @@
-// CourseForm.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCourses } from "../../../context/CourseContext";
@@ -16,6 +15,7 @@ export default function CourseForm({ edit }) {
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [modules, setModules] = useState([]);
+  const [reviews, setReviews] = useState(0);
 
   useEffect(() => {
     if (edit && courseId) {
@@ -28,6 +28,7 @@ export default function CourseForm({ edit }) {
         setImage(course.image || "");
         setPreview(course.image || "");
         setModules(course.modules || []);
+        setReviews(course.reviews || 0);
       }
     }
   }, [edit, courseId, courses]);
@@ -45,7 +46,18 @@ export default function CourseForm({ edit }) {
   const handleSave = (e) => {
     e.preventDefault();
     if (!title) return;
-    const courseData = { title, description, level, teacher, image: imageFile ? preview : image, modules };
+
+    const courseData = { 
+      title,
+      description,
+      level,
+      teacher,
+      image: imageFile ? preview : image,
+      modules,
+      reviews,
+      lessonsCount: modules.reduce((sum, m) => sum + (m.lessons?.length || 0), 0)
+    };
+
     edit ? updateCourse(courseId, courseData) : addCourse(courseData);
     navigate("/admin/courses");
   };
@@ -119,7 +131,7 @@ export default function CourseForm({ edit }) {
             />
 
             {mod.lessons?.map((lesson, j) => (
-              <div key={j} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div key={j} className="grid grid-cols-1 md:grid-cols-4 gap-2">
                 <input
                   value={lesson.title}
                   onChange={e => { const copy = [...modules]; copy[i].lessons[j].title = e.target.value; setModules(copy); }}
@@ -136,6 +148,12 @@ export default function CourseForm({ edit }) {
                   value={lesson.pdf || ""}
                   onChange={e => { const copy = [...modules]; copy[i].lessons[j].pdf = e.target.value; setModules(copy); }}
                   placeholder="PDF URL (ixtiyoriy)"
+                  className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+                <input
+                  value={lesson.time || "5:00"}
+                  onChange={e => { const copy = [...modules]; copy[i].lessons[j].time = e.target.value; setModules(copy); }}
+                  placeholder="Dars vaqti"
                   className="border p-2 rounded bg-white dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               </div>

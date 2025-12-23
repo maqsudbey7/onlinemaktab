@@ -1,4 +1,3 @@
-// Modules.jsx
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCourses } from "../../../context/CourseContext";
@@ -35,8 +34,14 @@ export default function Modules() {
   const handleAddLesson = (modId) => {
     const lesson = lessonInputs[modId];
     if (!lesson?.title || !lesson?.video) return;
-    addLesson(course.id, modId, lesson);
-    setLessonInputs(prev => ({ ...prev, [modId]: { title: "", video: "" } }));
+    // Qo‘shimcha maydonlar bilan
+    addLesson(course.id, modId, {
+      title: lesson.title,
+      video: lesson.video,
+      pdf: lesson.pdf || "",
+      time: lesson.time || "5:00",
+    });
+    setLessonInputs(prev => ({ ...prev, [modId]: { title: "", video: "", pdf: "", time: "5:00" } }));
   };
 
   const handleDeleteLesson = (modId, lessonId) => {
@@ -95,6 +100,18 @@ export default function Modules() {
               placeholder="Video URL"
               className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
+            <input
+              value={lessonInputs[mod.id]?.pdf || ""}
+              onChange={e => handleLessonChange(mod.id, "pdf", e.target.value)}
+              placeholder="PDF URL (ixtiyoriy)"
+              className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+            <input
+              value={lessonInputs[mod.id]?.time || "5:00"}
+              onChange={e => handleLessonChange(mod.id, "time", e.target.value)}
+              placeholder="Time"
+              className="flex-1 border p-2 rounded bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
             <button
               onClick={() => handleAddLesson(mod.id)}
               className="bg-green-500 hover:bg-green-600 text-white px-3 rounded transition"
@@ -116,7 +133,21 @@ export default function Modules() {
                     className="text-blue-500 dark:text-blue-400 underline"
                   >
                     Video
-                  </a>
+                  </a>{" "}
+                  {l.pdf && (
+                    <>
+                      |{" "}
+                      <a
+                        href={l.pdf}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-green-500 dark:text-green-400 underline"
+                      >
+                        PDF
+                      </a>
+                    </>
+                  )}{" "}
+                  | {l.time}
                 </span>
                 <button
                   onClick={() => handleDeleteLesson(mod.id, l.id)}

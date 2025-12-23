@@ -112,13 +112,13 @@ export default function AdminLayout() {
               collapsed={collapsed}
               onClick={() => mobileOpen && setMobileOpen(false)}
             />
-            <SidebarItem
+            {/* <SidebarItem
               to="/admin/users"
               icon={<FiUsers />}
               text="Users"
               collapsed={collapsed}
               onClick={() => mobileOpen && setMobileOpen(false)}
-            />
+            /> */}
             <SidebarItem
               to="/"
               icon={<FiHome />}

@@ -40,6 +40,7 @@ export default function App() {
         <Route path="/result" element={<Result />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound/>} />
+        
 
         <Route path="/courses/:courseId/lesson/:lessonId" element={<LessonDetail />} />
 
@@ -49,6 +50,7 @@ export default function App() {
 
         {/* Protected example */}
         {/* <Route path="/profile" element={<PrivateRoute><Profile/></PrivateRoute>} /> */}
+        
       </Route>
     </Routes>
   );

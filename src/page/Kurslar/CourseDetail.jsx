@@ -1,139 +1,282 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaUsers, FaCalendar, FaBook, FaVideo, FaChevronDown, FaCheckCircle } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaBook,
+  FaVideo,
+  FaChevronDown,
+  FaCheckCircle,
+  FaLock,
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCourses } from "../../context/CourseContext";
 import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
+import toast from "react-hot-toast";
 
 export default function CourseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { courses } = useCourses();
 
-  const course = courses.find(c => c.id === parseInt(id));
+  const { courses, watched } = useCourses();
+  const course = courses.find((c) => c.id === +id);
 
-  const [lessonSearch, setLessonSearch] = useState("");
   const [openModule, setOpenModule] = useState(null);
-  const [watched, setWatched] = useState({});
+  const [lessonSearch, setLessonSearch] = useState("");
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("watchedLessons") || "{}");
-    setWatched(saved);
-  }, []);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isLoggedIn = !!user;
 
-  if (!course)
-    return <p className="text-center mt-20 text-gray-500 dark:text-gray-400 text-xl">Kurs topilmadi!</p>;
+  const purchasedCourses = JSON.parse(
+    localStorage.getItem("purchasedCourses") || "[]"
+  );
+  const purchased = purchasedCourses.includes(course?.id);
 
-  const toggleModule = index => setOpenModule(openModule === index ? null : index);
+  if (!course) {
+    return (
+      <p className="text-center mt-20 text-xl text-gray-500 dark:text-gray-400">
+        Kurs topilmadi
+      </p>
+    );
+  }
+
+  // Dynamic lessonsCount
+  const totalLessons = course.modules.reduce(
+    (sum, mod) => sum + (mod.lessons?.length || 0),
+    0
+  );
+
+  const toggleModule = (i) => {
+    setOpenModule(openModule === i ? null : i);
+  };
+
+  const handlePurchase = () => {
+    if (!isLoggedIn) {
+      toast.error("🔐 Avval tizimga kiring!");
+      setTimeout(() => navigate("/login"), 1200);
+      return;
+    }
+
+    toast.success("💳 To‘lov sahifasiga yo‘naltirilmoqda...");
+
+    if (!purchasedCourses.includes(course.id)) {
+      purchasedCourses.push(course.id);
+      localStorage.setItem(
+        "purchasedCourses",
+        JSON.stringify(purchasedCourses)
+      );
+    }
+
+    const paymeUrl = `https://payme.uz/checkout/6948165dace52621ee174434?back=${window.location.href}`;
+    window.location.href = paymeUrl;
+  };
+
+  const handleLessonClick = (moduleIndex, lessonIndex) => {
+    if (!purchased) {
+      setShowPurchaseModal(true);
+      return;
+    }
+
+    navigate(`/courses/${course.id}/lesson/${moduleIndex}-${lessonIndex}`);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 md:px-6 py-12 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 py-12 relative">
       <BackgroundLogos />
-      <div className="max-w-7xl mx-auto">
-        {/* TOP INFO */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
+
+      <div className="max-w-7xl mx-auto space-y-10">
+        {/* TOP */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{course.title}</h1>
-            <p className="text-gray-700 dark:text-gray-300 leading-7 mb-6">{course.description}</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              {course.title}
+            </h1>
 
-            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-gray-700 dark:text-gray-300 text-[15px] md:text-[17px] mb-2">
-              <div className="flex items-center gap-2">
-                <FaUsers /> {course.students} o'quvchilar
-              </div>
-              <div className="flex items-center gap-2">
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
+              {course.description}
+            </p>
+
+            <div className="flex flex-wrap gap-5 mt-4 text-gray-600 dark:text-gray-300">
+              <span className="flex items-center gap-2">
                 <FaCalendar /> {course.date}
-              </div>
-              <div className="flex items-center gap-2">
-                <FaBook /> {course.lessonsCount} darslar soni
-              </div>
+              </span>
+              <span className="flex items-center gap-2">
+                <FaBook /> {totalLessons}
+              </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-[15px] md:text-[17px]">
-              <input
-                type="text"
-                placeholder="Dars nomi bo‘yicha qidirish..."
-                value={lessonSearch}
-                onChange={e => setLessonSearch(e.target.value)}
-                className="w-full md:w-64 p-2 rounded border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500 focus:border-blue-600 dark:focus:border-blue-400 outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
-              />
-            </div>
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Dars qidirish..."
+              value={lessonSearch}
+              onChange={(e) => setLessonSearch(e.target.value)}
+              className="mt-4 w-full md:w-64 p-2 rounded border 
+                bg-white dark:bg-gray-700 
+                border-gray-300 dark:border-gray-600
+                text-gray-900 dark:text-white"
+            />
+
+            {/* BUY */}
+            <button
+              onClick={handlePurchase}
+              disabled={purchased}
+              className={`mt-4 px-6 py-3 rounded-lg ml-4 font-semibold text-white transition ${
+                purchased
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+              }`}
+            >
+              {purchased ? "Sotib olingan" : "Kursni sotib olish"}
+            </button>
           </div>
 
-          <div className="w-full h-48 md:h-56 rounded-xl overflow-hidden">
-            <img src={course.image || null} alt="Course preview" className="w-full h-full object-cover" />
-          </div>
+          <img
+            src={course.image}
+            alt={course.title}
+            className="rounded-xl object-cover w-full h-48 md:h-full"
+          />
         </div>
 
         {/* MODULES */}
-        <div className="mt-8 md:mt-12 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-md transition-colors duration-300">
-          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Kurs dasturi</h2>
+        <div
+          className={`bg-white dark:bg-gray-800 p-6 rounded-xl shadow transition-all ${
+            openModule !== null ? "bg-opacity-90 backdrop-blur-sm" : ""
+          }`}
+        >
+          <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+            Kurs dasturi
+          </h2>
 
-          <div className="space-y-4">
-            {course.modules.map((mod, i) => {
-              const filteredLessons = mod.lessons.filter(lesson =>
-                lesson.title.toLowerCase().includes(lessonSearch.toLowerCase())
-              );
+          {course.modules.map((mod, i) => {
+            const lessons = mod.lessons.filter((l) =>
+              l.title.toLowerCase().includes(lessonSearch.toLowerCase())
+            );
 
-              return (
-                <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-colors duration-300">
-                  <div
-                    className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                    onClick={() => toggleModule(i)}
-                  >
-                    <div>
-                      <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">{mod.title}</h3>
-                      <p className="text-gray-500 dark:text-gray-300 text-sm">{mod.lessons.length} darslik | {mod.duration}</p>
-                    </div>
-                    <FaChevronDown
-                      className={`transition-transform duration-300 text-gray-500 dark:text-gray-300 ${openModule === i ? "rotate-180" : ""}`}
-                    />
+            return (
+              <div
+                key={mod.id ?? i}
+                className="mb-4 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+              >
+                <div
+                  onClick={() => toggleModule(i)}
+                  className="flex justify-between p-4 cursor-pointer
+                    bg-gray-100 dark:bg-gray-700"
+                >
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                      {mod.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {mod.lessons.length} dars
+                    </p>
                   </div>
-
-                  <AnimatePresence initial={false}>
-                    {openModule === i && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 overflow-hidden"
-                      >
-                        {filteredLessons.length > 0 ? (
-                          filteredLessons.map((lesson, j) => {
-                            const isWatched = watched[course.id]?.[`${i}-${j}`];
-
-                            return (
-                              <div
-                                key={j}
-                                className="bg-white dark:bg-gray-700 rounded-xl shadow-md mt-4 hover:shadow-xl p-4 cursor-pointer transition transform hover:-translate-y-1"
-                                onClick={() => navigate(`/courses/${course.id}/lesson/${i}-${j}`)}
-                              >
-                                <div className="flex items-center gap-3 mb-2">
-                                  {isWatched ? (
-                                    <FaCheckCircle className="text-green-500 text-lg" />
-                                  ) : (
-                                    <FaVideo className="text-blue-500 text-lg" />
-                                  )}
-                                  <h4 className="font-semibold text-gray-900 dark:text-white">{lesson.title}</h4>
-                                </div>
-
-                                <p className="text-gray-500 dark:text-gray-300 text-sm">{lesson.time}</p>
-                                <span className="mt-2 inline-block text-xs text-gray-400 dark:text-gray-400">Video dars</span>
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p className="col-span-full text-gray-400 dark:text-gray-400 text-center">Hech qanday dars topilmadi</p>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  <FaChevronDown
+                    className={`transition ${
+                      openModule === i ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
-              );
-            })}
-          </div>
+
+                <AnimatePresence>
+                  {openModule === i && (
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: "auto" }}
+                      exit={{ height: 0 }}
+                      className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 p-4"
+                    >
+                      {lessons.map((lesson, j) => {
+                        const done = watched?.[course.id]?.[`${i}-${j}`];
+
+                        return (
+                          <div
+                            key={`${course.id}-${i}-${j}`}
+                            onClick={() => handleLessonClick(i, j)}
+                            className="p-4 rounded-xl 
+                              bg-gray-50 dark:bg-gray-700 
+                              shadow cursor-pointer 
+                              hover:scale-105 transition flex flex-col justify-center"
+                          >
+                            <div className="flex gap-2 items-center">
+                              {done ? (
+                                <FaCheckCircle className="text-green-500" />
+                              ) : purchased ? (
+                                <FaVideo className="text-blue-500" />
+                              ) : (
+                                <FaLock className="text-red-500" />
+                              )}
+                              <h4 className="font-semibold text-gray-900 dark:text-white text-center">
+                                {lesson.title}
+                              </h4>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">
+                              {lesson.time}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
       </div>
+
+      {/* MODAL */}
+      <AnimatePresence>
+        {showPurchaseModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex items-center justify-center z-50
+             bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowPurchaseModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg w-96"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+                Kurs sotib olinmagan
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 text-center">
+                Bu mavzuga kirish uchun kursni sotib olishingiz kerak.
+              </p>
+
+              <div className="flex flex-col items-center mb-6">
+                <img
+                  src={course.image}
+                  alt={course.title}
+                  className="w-40 h-24 object-cover rounded-lg mb-2"
+                />
+                <p className="font-semibold text-gray-900 dark:text-white text-center">
+                  {course.title}
+                </p>
+              </div>
+
+              <button
+                onClick={handlePurchase}
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold mb-2"
+              >
+                Kursni sotib olish
+              </button>
+              <button
+                onClick={() => setShowPurchaseModal(false)}
+                className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 dark:text-gray-900 py-2 rounded-lg font-medium"
+              >
+                Bekor qilish
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

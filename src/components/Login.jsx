@@ -1,100 +1,141 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import BackgroundLogos from "./BackgroundLogos/BackgroundLogos";
 
 export default function Login() {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const inputsRef = useRef([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  /* ================= INPUT CHANGE ================= */
   const handleChange = (e, index) => {
     const value = e.target.value;
-    if (/^[0-9]?$/.test(value)) {
-      const newCode = [...code];
-      newCode[index] = value;
-      setCode(newCode);
 
-      if (value && index < 5) {
-        inputsRef.current[index + 1].focus();
-      }
+    if (!/^[0-9]?$/.test(value)) return;
+
+    const newCode = [...code];
+    newCode[index] = value;
+    setCode(newCode);
+    setError("");
+
+    if (value && index < 5) {
+      inputsRef.current[index + 1]?.focus();
     }
   };
 
+  /* ================= BACKSPACE ================= */
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
+      inputsRef.current[index - 1]?.focus();
     }
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
-  const fullCode = code.join("");
+  /* ================= SUBMIT ================= */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fullCode = code.join("");
 
-  if (fullCode === "111111") {
-    localStorage.setItem("role", "admin");
-    // admin ma'lumotini ham saqlash
-    localStorage.setItem("user", JSON.stringify({
-      name: "Admin",
-      email: "admin@example.com",
-      role: "admin",
-      onlineDays: 0,
-      watchedCourses: []
-    }));
-    navigate("/admin");
-    return;
-  }
+    /* ========= ADMIN ========= */
+    if (fullCode === "111111") {
+      const adminUser = {
+        id: 1,
+        name: "Admin",
+        role: "admin",
+        loginAt: new Date().toISOString(),
+      };
 
-  if (fullCode === "222222") {
-    localStorage.setItem("role", "user");
-    localStorage.setItem("user", JSON.stringify({
-      name: "Maqsudbek",
-      email: "maq@example.com",
-      role: "user",
-      onlineDays: 0,
-      watchedCourses: []
-    }));
-    navigate("/profile"); // yoki /courses
-    return;
-  }
+      localStorage.setItem("user", JSON.stringify(adminUser));
+      window.dispatchEvent(new Event("userChanged"));
 
-  setMessage("❌ Kod xato yoki eskirgan");
-};
-;
+      navigate(location.state?.from || "/admin", { replace: true });
+      return;
+    }
+
+    /* ========= USER ========= */
+    const validUserCodes = ["222222", "333333"];
+
+    if (validUserCodes.includes(fullCode)) {
+      const normalUser = {
+        id: Date.now(),
+        name: "User",
+        role: "user",
+        loginAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem("user", JSON.stringify(normalUser));
+      window.dispatchEvent(new Event("userChanged"));
+
+      navigate(location.state?.from || "/profile", { replace: true });
+      return;
+    }
+
+    /* ========= ERROR ========= */
+    setError("❌ Kod noto‘g‘ri yoki muddati tugagan");
+    setCode(["", "", "", "", "", ""]);
+    inputsRef.current[0]?.focus();
+  };
 
   return (
-    <div className="flex items-center justify-center mt-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl w-[500px] transition-colors duration-300">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+    <div className=" flex mt-6 items-center justify-center dark:bg-gray-900 transition-colors">
+      <BackgroundLogos/>
+      <div className="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl w-full max-w-md transition-colors">
+
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-white">
           Login
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <p className="mb-6 text-sm text-center text-gray-600 dark:text-gray-300">
+          Kirish kodini{" "}
+          <a
+            href="https://t.me/AroN_Zade"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-600 dark:text-indigo-400 underline"
+          >
+            @AroN_Zade
+          </a>{" "}
+          orqali olishingiz mumkin
+        </p>
+
+        {/* CODE INPUTS */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-between gap-3">
             {code.map((num, idx) => (
               <input
                 key={idx}
                 type="text"
+                inputMode="numeric"
                 maxLength="1"
                 value={num}
                 onChange={(e) => handleChange(e, idx)}
                 onKeyDown={(e) => handleKeyDown(e, idx)}
                 ref={(el) => (inputsRef.current[idx] = el)}
-                className="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-300"
+                className="
+                  w-12 h-12 text-center text-xl rounded-lg
+                  border border-gray-300 dark:border-gray-600
+                  bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-white
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500
+                  transition-colors
+                "
               />
             ))}
           </div>
 
           <button
             type="submit"
-            className="bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition-colors"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition"
           >
             Kirish
           </button>
         </form>
 
-        {message && (
-          <p className="mt-6 text-center font-medium text-red-600 dark:text-red-400">
-            {message}
+        {/* ERROR */}
+        {error && (
+          <p className="mt-6 text-center font-medium text-red-600">
+            {error}
           </p>
         )}
       </div>

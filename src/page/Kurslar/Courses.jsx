@@ -2,34 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaBook, FaSignal, FaUser, FaHeart, FaRegHeart } from "react-icons/fa";
-import img1 from "../../../public/js.webp";
-import img2 from "../../../public/img2.webp";
 import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
-
-const courses = [
-  {
-    id: 1,
-    title: "JavaScript",
-    lessons: 42,
-    level: "Boshlang'ich",
-    teacher: "Samar",
-    image: img1,
-    description: "JavaScript dasturlash tili asoslari va amaliy mashqlar.",
-    rating: 4.8,
-    progress: 30,
-  },
-  {
-    id: 2,
-    title: "TypeScript",
-    lessons: 38,
-    level: "O'rta",
-    teacher: "Ulugbek",
-    image: img2,
-    description: "TypeScript bilan kuchli va xavfsiz kod yozishni o'rganing.",
-    rating: 4.6,
-    progress: 65,
-  },
-];
+import { courses } from "../../data/courses"; // sizning yangi courses.js faylingiz
 
 export default function Courses() {
   const [search, setSearch] = useState("");
@@ -42,15 +16,22 @@ export default function Courses() {
     );
   };
 
+  // Filter
   const filtered = courses.filter(
     (c) =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
-      c.level.toLowerCase().includes(search.toLowerCase())
+      c.description.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Helper function: modul ichidagi lessonlarni jamlash
+  const getTotalLessons = (course) => {
+    if (!course.modules) return 0;
+    return course.modules.reduce((sum, mod) => sum + (mod.lessons?.length || 0), 0);
+  };
+
   return (
-    <div className="py-12 px-6 1 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300 ">
-      <BackgroundLogos/>
+    <div className="py-12 px-6 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 transition-colors duration-300">
+      <BackgroundLogos />
       <div className="max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -82,6 +63,7 @@ export default function Courses() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {filtered.map((c) => {
               const isFavorite = favorites.includes(c.id);
+              const totalLessons = getTotalLessons(c);
 
               return (
                 <motion.div
@@ -105,16 +87,16 @@ export default function Courses() {
                     )}
                   </div>
 
-                  {/* Image with hover preview */}
+                  {/* Image */}
                   <div className="h-50 overflow-hidden relative">
                     <img
                       src={c.image}
                       alt={c.title}
                       className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white p-4 text-center text-sm">
+                    {/* <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white p-4 text-center text-sm">
                       {c.description}
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Content */}
@@ -123,34 +105,19 @@ export default function Courses() {
                       {c.title}
                     </h3>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <span className="text-xs bg-green-100 dark:bg-green-700 text-green-700 dark:text-green-100 px-2 py-1 rounded-full">
-                        {c.level}
-                      </span>
-                    </div>
-
-                    {/* Info with icons */}
+                    {/* Info */}
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-2">
                       <FaBook className="text-blue-500" /> Darslar soni:{" "}
-                      <span className="text-gray-700 dark:text-gray-100">{c.lessons}</span>
+                      <span className="text-gray-700 dark:text-gray-100">{totalLessons}</span>
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
                       <FaSignal className="text-green-500" /> Reyting:{" "}
-                      <span className="text-gray-700 dark:text-gray-100">{c.rating} ★</span>
+                      <span className="text-gray-700 dark:text-gray-100">{c.reviews} reviews</span>
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
                       <FaUser className="text-purple-500" /> O'qituvchi:{" "}
-                      <span className="text-gray-700 dark:text-gray-100">{c.teacher}</span>
+                      <span className="text-gray-700 dark:text-gray-100">{c.teacher || "N/A"}</span>
                     </p>
-
-                    {/* Progress bar */}
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-3">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full"
-                        style={{ width: `${c.progress}%` }}
-                      ></div>
-                    </div>
 
                     {/* Button */}
                     <button
