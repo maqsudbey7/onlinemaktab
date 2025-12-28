@@ -3,37 +3,36 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import BackgroundLogos from "../../components/BackgroundLogos/BackgroundLogos";
 
-const questions = [
-  { id: 1, answer: "14" },
-  { id: 2, answer: "12" },
-  { id: 3, answer: "16" },
-  { id: 4, answer: "5" },
-  { id: 5, answer: "3" },
-  { id: 6, answer: "13" },
-  { id: 7, answer: "9" },
-  { id: 8, answer: "3" },
-  { id: 9, answer: "9" },
-  { id: 10, answer: "3" },
-];
-
 export default function Result() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { answers, time, username } = state || {};
+  const { answers, username, category } = state || {};
 
   if (!answers) {
     navigate("/"); 
     return null;
   }
 
+  const questionsByCategory = {
+    ildizlar: [
+      { answer: "4" },
+      { answer: "9" },
+    ],
+    butun_sonlar: [
+      { answer: "8" },
+      { answer: "5" },
+    ],
+  };
+
+  const questions = questionsByCategory[category] || [];
   const correct = answers.filter((a, i) => a === questions[i].answer).length;
   const wrong = answers.filter((a, i) => a && a !== questions[i].answer).length;
-  const unanswered = answers.filter((a) => !a).length;
+  const unanswered = answers.filter(a => !a).length;
   const percent = Math.round((correct / questions.length) * 100);
   const passed = percent >= 50;
 
   return (
-    <div className=" flex items-center justify-center dark:from-gray-800 dark:to-gray-900 p-4 transition-colors duration-300">
+    <div className="flex items-center justify-center dark:from-gray-800 dark:to-gray-900 p-4 transition-colors duration-300">
       <BackgroundLogos/>
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -41,30 +40,20 @@ export default function Result() {
         transition={{ duration: 0.5 }}
         className="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-5 transition-colors duration-300"
       >
-        <h2 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-gray-100">
-          Oson Matematika
-        </h2>
+        <h2 className="text-3xl font-bold mb-2 text-center text-gray-800 dark:text-gray-100">{category}</h2>
         <p className="text-center text-gray-500 dark:text-gray-400 mb-6">{new Date().toLocaleString()}</p>
 
-        {/* Progress Circle */}
         <div className="flex justify-center mb-6">
           <div className="relative w-36 h-36">
             <svg className="w-full h-full">
-              <circle
-                cx="72"
-                cy="72"
-                r="60"
-                className="stroke-gray-200 dark:stroke-gray-700 fill-transparent stroke-8"
-              />
+              <circle cx="72" cy="72" r="60" className="stroke-gray-200 dark:stroke-gray-700 fill-transparent stroke-8"/>
               <motion.circle
-                cx="72"
-                cy="72"
-                r="60"
+                cx="72" cy="72" r="60"
                 className={`${passed ? "stroke-green-500" : "stroke-red-500"} fill-transparent stroke-8`}
-                strokeDasharray={2 * Math.PI * 60}
-                strokeDashoffset={2 * Math.PI * 60 * (1 - percent / 100)}
-                initial={{ strokeDashoffset: 2 * Math.PI * 60 }}
-                animate={{ strokeDashoffset: 2 * Math.PI * 60 * (1 - percent / 100) }}
+                strokeDasharray={2*Math.PI*60}
+                strokeDashoffset={2*Math.PI*60*(1-percent/100)}
+                initial={{ strokeDashoffset: 2*Math.PI*60 }}
+                animate={{ strokeDashoffset: 2*Math.PI*60*(1-percent/100) }}
                 transition={{ duration: 1 }}
               />
             </svg>
@@ -79,7 +68,6 @@ export default function Result() {
           {passed ? "Muvaffaqiyatli" : "Muvaffaqiyatsiz"}
         </p>
 
-        {/* Answer Stats */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="p-4 rounded-lg shadow bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200">
             <p className="text-lg font-semibold">To‘g‘ri javoblar</p>
